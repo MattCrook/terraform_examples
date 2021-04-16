@@ -1,0 +1,29 @@
+https://cloud.google.com/community/tutorials/getting-started-on-gcp-with-terraform
+
+
+Be sure to replace INSERT_USERNAME with your username and then run terraform plan and verify the output looks correct.
+If it does, run terraform apply to apply the changes.
+
+Run terraform apply followed by terraform output ip to return the instance's external IP address. 
+Validate that everything is set up correctly at this point by connecting to that IP address with SSH.
+
+This tutorial needs the default network's default-allow-ssh firewall rule to be in place before you can use SSH to connect to the instance. 
+If you are starting with a new project, this can take a few minutes. 
+You can check the firewall rules list to make sure that the firewall rule has been created.
+
+Run this to ssh into the newly created VM:
+ssh `terraform output ip`
+
+
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_cloud():
+   return 'Hello Cloud!'
+
+app.run(host='0.0.0.0')
+
+python app.py
+curl http://0.0.0.0:5000
