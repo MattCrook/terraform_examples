@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12, < 0.13"
+  required_version = ">= 0.12"
 }
 
 
@@ -7,39 +7,51 @@ provider "aws" {
     region = "us-east-2"
 }
 
-// AMI is an Amazon Machine Image, to run on the EC2 instance.
-// This is a single instance, this would need to be removed if we were planning to use the aws_launch_configuration.
-resource "aws_instance" "my_instance" {
-    ami                    = "ami-0c55b159cbfafe1f0"
-    // instance_type          = "t2.micro"
-    // conditionally set the instance_type depending on value of terraform.workspace.
-    // Sets instance type to t2.medium in the default workspace and t2.micro in all other (for possibly experimentation to save money).
-    instance_type          = terraform.workspace == "default" ? "t2.medium" : "t2.micro"
-
-    vpc_security_group_ids = [aws_security_group.instance.id]
-
-    // Simple bash script that writes to a html file and runs a tool called busybox and serves the file.
-    // user_data = <<-EOF
-    //             #! /bin/bash
-    //             echo "Hello Terraform" > index.html
-    //             nohup busybox hhtpd -f -p 8080 &
-    //             EOF
-    user_data = <<-EOF
-            #! /bin/bash
-            echo "Hello Terraform" > index.html
-            nohup busybox hhtpd -f -p "${var.server_port}" &
-            EOF
-
-    // If Doesn't have a name yet, so to add one you can add tags to the aws_instance resource
-    tags = {
-        Name = "AWS-terraform-example"
+# Providing a backend for the web-server cluster to use S3 as the backend.
+terraform {
+    backend "s3" {
+        bucket         = "tf-up-and-running-state-mc"
+        key            = "stage/services/terraform.tfstate"
+        region         = "us-east-2"
+        dynamodb_table = "tf-up-and-running-locks"
+        encrypt        = true
     }
 }
 
+resource "aws_s3_bucket" "tf_state" {
+    bucket = "tf-up-and-running-state-mc"
+
+    lifecycle {
+        prevent_destroy = true
+    }
+
+    versioning {
+        enabled = true
+    }
+
+    server_side_encryption_configuration {
+        rule {
+            apply_server_side_encryption_by_default {
+                sse_algorithm = "AES256"
+            }
+        }
+    }
+}
+
+resource "aws_dynamodb_table" "terraform_locks" {
+    name            = "tf-up-and-running-locks"
+    billing_mode    = "PAY_PER_REQUEST"
+    hash_key        = "LockID"
+
+    attribute {
+        name = "LockID"
+        type = "S"
+    }
+}
 // By defult AWS does not allow incoming and outgoing traffic on EC2 instance.
 // To allow, must create a security group
 // Specfies that the group allows incoming TCP requests on port 8080 from CIDR block 0.0.0.0/0.
-// Use the id  attribute exported from this resource up in the aws_instance resource.
+// Use the id  attribute exported from this resource up in the aws_instance resource/ or aws_launch_configuration below.
 resource "aws_security_group" "instance" {
     name = "terraform-example-instance"
 
@@ -86,7 +98,7 @@ resource "aws_autoscaling_group" "my_instance_asg" {
     launch_configuration = aws_launch_configuration.my_instance.name
     vpc_zone_identifier = data.aws_subnet_ids.default.ids
 
-    // Pointing at new target group...defined below as "asg". 
+    // Pointing at new target group...defined below as "asg".
     target_group_arns = [aws_lb_target_group.asg.arn]
 
     // Defualt health_check type is "EC2". Minimal health check that considers an instance unhealthy only if the AWS hypervisor says
