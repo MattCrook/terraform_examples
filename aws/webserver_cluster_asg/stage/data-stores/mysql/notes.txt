@@ -1,0 +1,4 @@
+Set DB password in a Secrets manager or on the command line.
+If set on the command line, use the variable "db_password" {}
+and set the env variable like: $ export TF_VAR_db_password="(YOUR_DB_PASSWORD)"
+Note - the space at the beginning before export - to prevent the secret from being stored on disk in bash history.

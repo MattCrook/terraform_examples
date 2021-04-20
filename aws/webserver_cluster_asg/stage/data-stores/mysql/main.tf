@@ -1,7 +1,3 @@
-provider "aws" {
-    region = "us-east-2"
-}
-
 # Creates a database in RDS. Amazon's Relational Database Service.
 resource "aws_db_instance" "example_rds" {
     identifier_prefix = "tf-up-and-running-mc"
