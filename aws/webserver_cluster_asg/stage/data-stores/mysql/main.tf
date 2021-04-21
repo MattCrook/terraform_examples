@@ -4,8 +4,8 @@ resource "aws_db_instance" "example_rds" {
     engine            = "mysql"
     allocated_storage = 10
     instance_class    = "db.t2.micro"
-    name              = "example_database"
-    username          = "root"
+    name              = var.db_name
+    username          = "admin"
     # Two options for password. Use a secrets store and use data source,
     # or manage outside of TF and pass them in as variables.
     # password          = data.aws_secretsmanager_secret_version.db_password.secret_string

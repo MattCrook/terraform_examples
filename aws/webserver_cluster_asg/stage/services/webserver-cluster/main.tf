@@ -8,80 +8,62 @@ provider "aws" {
 }
 
 # Providing a backend for the web-server cluster to use S3 as the backend.
-// terraform {
-//     backend "s3" {
-//         bucket         = "tf-up-and-running-state-mc"
-//         key            = "stage/services/terraform.tfstate"
-//         region         = "us-east-2"
-//         dynamodb_table = "tf-up-and-running-locks"
-//         encrypt        = true
-//     }
-// }
+terraform {
+    backend "s3" {
+        bucket         = "tf-up-and-running-state-mc"
+        key            = "stage/services/terraform.tfstate"
+        region         = "us-east-2"
+        dynamodb_table = "tf-up-and-running-locks"
+        encrypt        = true
+    }
+}
 
-// resource "aws_s3_bucket" "tf_state" {
-//     bucket = "tf-up-and-running-state-mc"
+# Created in global/s3/main.tf - Creating the S3 bucket to store the state files in.
+# resource "aws_s3_bucket" "tf_state" {
+#     bucket = "tf-up-and-running-state-mc"
 
-//     lifecycle {
-//         prevent_destroy = true
-//     }
+#     lifecycle {
+#         prevent_destroy = true
+#     }
 
-//     versioning {
-//         enabled = true
-//     }
+#     versioning {
+#         enabled = true
+#     }
 
-//     server_side_encryption_configuration {
-//         rule {
-//             apply_server_side_encryption_by_default {
-//                 sse_algorithm = "AES256"
-//             }
-//         }
-//     }
-// }
+#     server_side_encryption_configuration {
+#         rule {
+#             apply_server_side_encryption_by_default {
+#                 sse_algorithm = "AES256"
+#             }
+#         }
+#     }
+# }
 
 # DynamoBD tabe is AWS's distributed key value store, used for locking.
 # Supports strongy conistant reads and conditional writes.  Need this to ensure you have a distributed lock system.
-resource "aws_dynamodb_table" "terraform_locks" {
-    name            = "tf-up-and-running-locks"
-    billing_mode    = "PAY_PER_REQUEST"
-    hash_key        = "LockID"
+# Created in global/s3/main.tf
+// resource "aws_dynamodb_table" "terraform_locks" {
+//     name            = "tf-up-and-running-locks"
+//     billing_mode    = "PAY_PER_REQUEST"
+//     hash_key        = "LockID"
 
-    attribute {
-        name = "LockID"
-        type = "S"
-    }
-}
-# By defult AWS does not allow incoming and outgoing traffic on EC2 instance.
-# To allow, must create a security group
-# Specfies that the group allows incoming TCP requests on port 8080 from CIDR block 0.0.0.0/0.
-# Use the id  attribute exported from this resource up in the aws_instance resource/ or aws_launch_configuration below.
-resource "aws_security_group" "instance" {
-    name = "terraform-example-instance"
+//     attribute {
+//         name = "LockID"
+//         type = "S"
+//     }
+// }
 
-    ingress {
-        # from_port   = 8080
-        # to_port     = 8080
-        # Or using variable reference:
-        from_port   = var.server_port
-        to_port     = var.server_port
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-}
 
 
 
 # To use ASG (Auto Scaling Group) replace the "aws_instance" with the following.
 # ASG takes care of launching a cluster or EC2 instances, monitoring health, replacing failed instances, and ajusting size of cluster in response to load.
 resource "aws_launch_configuration" "my_instance" {
-    ami                    = "ami-0c55b159cbfafe1f0"
+    # ami                  = "ami-0c55b159cbfafe1f0"
+    image_id               = data.aws_ami.ubuntu.id
     instance_type          = "t2.micro"
-    vpc_security_group_ids = [aws_security_group.instance.id]
-
-    user_data = <<-EOF
-            #! /bin/bash
-            echo "Hello Terraform" > index.html
-            nohup busybox hhtpd -f -p "${var.server_port}" &
-            EOF
+    security_groups        = [aws_security_group.instance.id]
+    user_data              = data.template_file.user_data.rendered
 
     # Required when using a launch configuration with auto scaling group.
     # When true, TF will invert order in which it replaces recourses,
@@ -90,8 +72,8 @@ resource "aws_launch_configuration" "my_instance" {
     lifecycle {
         create_before_destroy = true
     }
-
 }
+
 
 resource "aws_autoscaling_group" "my_instance_asg" {
     # Launch configurtions are immuatable. So if you change any parameter of your launch config TF will try to replace it.
@@ -118,23 +100,38 @@ resource "aws_autoscaling_group" "my_instance_asg" {
     }
 }
 
+# By defult AWS does not allow incoming and outgoing traffic on EC2 instance.
+# To allow, must create a security group
+# Specfies that the group allows incoming TCP requests on port 8080 from CIDR block 0.0.0.0/0.
+# Use the id  attribute exported from this resource up in the aws_instance resource/ or aws_launch_configuration below.
+resource "aws_security_group" "instance" {
+    name = var.instance_security_group_name
+
+    ingress {
+        from_port   = var.server_port
+        to_port     = var.server_port
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
 # Aws has 3 load balancers
 # Application Load Balancer (ALB) - best for HTTP and HTTPS traffic, operates at layer 7 (application layer)
 # Network Load Balancer(NLB) - best for TCP, UDP, and TLS traffic, operates at layer 4 (transport layer)
 # CLassic Load Balancer(CLB) - handles all, older an fewer features.
 resource "aws_lb" "example_load_balancer" {
-    name               = "terraform-asg-example"
+    name               = var.alb_name
     load_balancer_type = "application"
     subnets            = data.aws_subnet_ids.default.ids
     # Tell this resource to use security group "alb" defined below
-    security_group     = [aws_security_group.alb.id]
+    security_groups     = [aws_security_group.alb.id]
 }
 
 # Next step is to define a listener for this ALB
 # This listener configures the ALB to listen on port 80, use HTTP protocol and send a simple 404 page as defaul response for requests
 # that didnt match the lister rules.
 resource "aws_lb_listener" "http" {
-    load_balancer_arn = aws_lb.example.arn
+    load_balancer_arn = aws_lb.example_load_balancer.arn
     port              = 80
     protocol          = "HTTP"
 
@@ -154,7 +151,7 @@ resource "aws_lb_listener" "http" {
 # So that you can access the load balancer over HTTP, and outgoing requests on all ports so
 # that the load balancer can perform health checks.
 resource "aws_security_group" "alb" {
-    name = "terreaform-example-alb"
+    name = var.alb_security_group_name
 
     # Allow inbound HTTP requests
     ingress {
