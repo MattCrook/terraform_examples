@@ -1,5 +1,8 @@
 # Configures the web-server cluster code to read the state file from the S3 bucket and folder
 # where the database stores it's state.
+# Here in the webserver-cluster to give access for the webservers to read the data from the S3 bucket and folder (state file) of the mysql db where the mysql db stores its state.
+# Important to understand that data returned by "terraform_remote_state" is read-only. Nothing we do in the 
+# webderver-cluster TF code can modify that state.
 data "terraform_remote_state" "db" {
     backend = "s3"
 
@@ -23,9 +26,17 @@ data "aws_subnet_ids" "default" {
 }
 
 
+# template_file data source is used to ensure dynamic variables are available before the template is read or rendered.
+# Grabbing reference to vars here, in the TF code, to inject into file where they are used, ensuring they are available.
+# has 2 arguments, template, which is a string to render,
+# and vars, which is a map of variables to make available while rendering.
+# It has one output called rendered, which is the result of rendering template.
+# This sets template parameter to the contents of user_data.sh script and the vars parameter to the three vars
+# the script needs.
 data "template_file" "user_data" {
   template = file("user_data.sh")
 
+ # These variables go into the script as ${db_address} etc...
   vars = {
     server_port = var.server_port
     db_address  = data.terraform_remote_state.db.outputs.address

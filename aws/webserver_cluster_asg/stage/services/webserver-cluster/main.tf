@@ -63,6 +63,8 @@ resource "aws_launch_configuration" "my_instance" {
     image_id               = data.aws_ami.ubuntu.id
     instance_type          = "t2.micro"
     security_groups        = [aws_security_group.instance.id]
+
+    # Updated user_data parameter to point to the rendered output attribute of the template_file data source.
     user_data              = data.template_file.user_data.rendered
 
     # Required when using a launch configuration with auto scaling group.
@@ -73,6 +75,7 @@ resource "aws_launch_configuration" "my_instance" {
         create_before_destroy = true
     }
 }
+
 
 
 resource "aws_autoscaling_group" "my_instance_asg" {
