@@ -26,25 +26,6 @@ data "aws_subnet_ids" "default" {
 }
 
 
-# template_file data source is used to ensure dynamic variables are available before the template is read or rendered.
-# Grabbing reference to vars here, in the TF code, to inject into file where they are used, ensuring they are available.
-# has 2 arguments, template, which is a string to render,
-# and vars, which is a map of variables to make available while rendering.
-# It has one output called rendered, which is the result of rendering template.
-# This sets template parameter to the contents of user_data.sh script and the vars parameter to the three vars
-# the script needs.
-data "template_file" "user_data" {
-  template = file("user_data.sh")
-
- # These variables go into the script as ${db_address} etc...
-  vars = {
-    server_port = var.server_port
-    db_address  = data.terraform_remote_state.db.outputs.address
-    db_port     = data.terraform_remote_state.db.outputs.port
-  }
-}
-
-
 # With this setup Terraform generates a unique name for your Launch Configuration and
 # can then update the AutoScaling Group without conflict before destroying the previous Launch Configuration.
 data "aws_ami" "ubuntu" {
@@ -61,4 +42,23 @@ data "aws_ami" "ubuntu" {
   }
 
   owners = ["099720109477"] # Canonical
+}
+
+# template_file data source is used to ensure dynamic variables are available before the template is read or rendered.
+# Grabbing reference to vars here, in the TF code, to inject into file where they are used, ensuring they are available.
+# has 2 arguments, template, which is a string to render,
+# and vars, which is a map of variables to make available while rendering.
+# It has one output called rendered, which is the result of rendering template.
+# This sets template parameter to the contents of user_data.sh script and the vars parameter to the three vars
+# the script needs.
+
+data "template_file" "user_data" {
+  template = file("user_data.sh")
+
+ # These variables go into the script as ${db_address} etc...
+  vars = {
+    server_port = var.server_port
+    db_address  = data.terraform_remote_state.db.outputs.address
+    db_port     = data.terraform_remote_state.db.outputs.port
+  }
 }
