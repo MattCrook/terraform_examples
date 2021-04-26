@@ -1,70 +1,58 @@
-variable project_name { default = "flask-app" }
-variable namespace { default = "webserver_cluster" }
+provider "google" {
+  project     = var.project_id
+  region      = var.region
+  zone        = var.zone
+  credentials = file("credentials.json")
+}
 
-
-// resource "google_service_account_key" "sqlproxy_sa" {
-//   service_account_id = data.terraform_remote_state.project.outputs.sqlproxy_sa
-// }
-
+# Configure this module to store its state in the GCS bucket created in main.tf in webserver-cluster.
+terraform {
+    backend "gcs" {
+        bucket      = "tf-up-and-running-state-mc"
+        prefix      = "stage/data-stores/cloudsql/terraform.tfstate"
+        credentials = "./credentials.json"
+    }
+}
 
 # Creates a new Google SQL Database Instance.
-resource "google_sql_database_instance" "postgres" {
-  name             = var.db_name
-  database_version = "POSTGRES_9_6"
-  region           = "us-central1"
-  project          = var.project_name
+resource "google_sql_database_instance" "primary" {
+    project          = var.project_id
+    name             = var.db_name
+    region           = var.region
+    database_version = var.db_version
 
-  replica_configuration {
-    username = "admin"
-    password = var.db_password
-  }
-
-  settings {
-    tier = "db-f1-micro"
-    availability_type  = "ZONAL"
-    # For HA (High Availabilty) set this to Regional.
-    # https://cloud.google.com/sql/docs/postgres/high-availability#normal
-    // availability_type  = "REGIONAL"
-    backup_configuration {
-      enabled = true
+    lifecycle {
+        ignore_changes = [settings.0.replication_type]
     }
-    maintenance_window {
-      day = 2
-      hour = 19
-      update_track = "canary"
+    settings {
+        tier                           = var.instance_type
+        authorized_gae_applications    = []
+        crash_safe_replication         = false
+        disk_autoresize                = var.disk_autoresize
+        availability_type              = "REGIONAL"
+        disk_type                      = var.disk_type
+        pricing_plan                   = "PER_USE"
+        user_labels = {
+            "env" = "dev"
+        }
+        ip_configuration {
+            ipv4_enabled = true
+            require_ssl = false
+        }
+        backup_configuration {
+            enabled = true
+            location = "us"
+            point_in_time_recovery_enabled = true
+            start_time = "03:00"
+        }
+        location_preference {
+            zone = var.zone
+        }
+        maintenance_window {
+            day = 7
+            hour = 4
+            update_track = "stable"
+        }
     }
-    ip_configuration {
-      ipv4_enabled = true
-    }
-  }
+    timeouts {}
 }
-
-# Represents a SQL database inside the Cloud SQL instance, hosted in Google's cloud.
-resource "google_sql_database" "database" {
-  name      = "my-database"
-  instance  = google_sql_database_instance.postgres.name
-  charset   = "UTF8"
-  collation = "en_US.UTF8"
-  project   = var.project_name
-}
-
-
-# Creates a new Google SQL User on a Google SQL User Instance.
-// resource "random_id" "db_name_suffix" {
-//   byte_length = 4
-// }
-
-// resource "google_sql_database_instance" "master" {
-//   name = "master-instance-${random_id.db_name_suffix.hex}"
-
-//   settings {
-//     tier = "db-f1-micro"
-//   }
-// }
-
-// resource "google_sql_user" "users" {
-//   name     = "me"
-//   instance = google_sql_database_instance.master.name
-//   host     = "me.com"
-//   password = "changeme"
-// }

@@ -26,3 +26,15 @@ variable "zone" {
   type        = string
   default     = "us-central1-c"
 }
+
+variable "project_name" {
+  description = "The name the current project"
+  type        = string
+  default     = "flask-app"
+}
+
+variable db_version { default = "POSTGRES_9_6" }
+variable disk_size { default = "725" }
+variable disk_type { default = "PD_SSD" }
+variable disk_autoresize { default = true }
+variable instance_type {default = "db-f1-micro"}

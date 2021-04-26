@@ -1,25 +1,50 @@
+provider "google" {
+  project     = var.project_id
+  region      = var.region
+  zone        = var.zone
+  credentials = file("credentials.json")
+}
+
+
+terraform {
+    backend "gcs" {
+        bucket      = "tf-up-and-running-state-mc"
+        prefix      = "global/google_storage/terraform.tfstate"
+        credentials = "./credentials.json"
+    }
+}
+
+
 # Our gcs bucket to store the state. Will use "gcs" as backend which is this bucket.
-resource "google_storage_bucket" "core-state" {
+resource "google_storage_bucket" "tf_state" {
     name          = var.bucket_name
-    storage_class = "STANDARD"
-    location      = var.location
+    location      = "US"
     project       = var.project_id
     # This is only here so we can destroy the bucket as part of automated tests. You should not copy this for production usage.
-    // force_destroy = true
+    force_destroy = true
     versioning {
         enabled = true
     }
 
-    lifecycle_rule {
-      condition {
-        age = 3
-    }
-      action {
-        type = "SetStorageClass"
-        storage_class = "STANDARD"
-      }
-   }
+    # Having a permanent encryption block with default_kms_key_name = "" works but results in terraform applying a change every run
+    # There is no enabled = false attribute available to ask terraform to ignore the block
+    // dynamic "encryption" {
+    //   # If an encryption key name is set for this bucket name -> Create a single encryption block
+    //   for_each = trimspace(lookup(var.encryption_key_names, lower(each.value), "")) != "" ? [true] : []
+    //   content {
+    //     default_kms_key_name = trimspace(
+    //       lookup(
+    //         var.encryption_key_names,
+    //         lower(each.value),
+    //         "Error retrieving kms key name", # Should be unreachable due to the for_each check
+    //         # Omitting default is deprecated & can help show if there was a bug
+    //         # https://www.terraform.io/docs/configuration/functions/lookup.html
+    //       )
+    //     )
+    //   }
+    // }
 }
+
 
 # Relational database google offers fully managed relational database service designed
 # to offer both strong consistency and horizontal scalability for mission-critical online transaction processing (OLTP) applications.
