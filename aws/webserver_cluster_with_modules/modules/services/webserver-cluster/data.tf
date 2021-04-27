@@ -52,8 +52,20 @@ data "aws_ami" "ubuntu" {
 # This sets template parameter to the contents of user_data.sh script and the vars parameter to the three vars
 # the script needs.
 
+// data "template_file" "user_data" {
+//   template = file("user_data.sh")
+
+//  # These variables go into the script as ${db_address} etc...
+//   vars = {
+//     server_port = var.server_port
+//     db_address  = data.terraform_remote_state.db.outputs.address
+//     db_port     = data.terraform_remote_state.db.outputs.port
+//   }
+// }
+
+# Need a path relative to the module itself
 data "template_file" "user_data" {
-  template = file("user_data.sh")
+  template = file("${path.module}/user-data.sh")
 
  # These variables go into the script as ${db_address} etc...
   vars = {

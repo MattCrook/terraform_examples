@@ -12,18 +12,6 @@ locals {
 }
 
 
-# Providing a backend for the web-server cluster to use S3 as the backend.
-terraform {
-    backend "s3" {
-        bucket         = "tf-up-and-running-state-mc"
-        key            = "stage/services/terraform.tfstate"
-        region         = "us-east-2"
-        dynamodb_table = "tf-up-and-running-locks"
-        encrypt        = true
-    }
-}
-
-
 # To use ASG (Auto Scaling Group) replace the "aws_instance" with the following.
 # ASG takes care of launching a cluster or EC2 instances, monitoring health, replacing failed instances, and ajusting size of cluster in response to load.
 resource "aws_launch_configuration" "my_instance" {
@@ -118,7 +106,11 @@ resource "aws_security_group" "alb" {
         protocol    = local.tcp_protocol
         cidr_blocks = local.all_ips
     }
+}
 
+# Separate inline blocks to separate resources - to prevent routing rules to overwrite one another.
+resource "aws_security_group" "allow_all_outbound" {
+    name = "${var.cluster_name}-alb"
     # Allow all outbound requets
     egress {
         from_port   = local.any_port
@@ -126,7 +118,6 @@ resource "aws_security_group" "alb" {
         protocol    = local.any_protocol
         cidr_blocks = local.all_ips
     }
-
 }
 
 # Target Group for ASG
