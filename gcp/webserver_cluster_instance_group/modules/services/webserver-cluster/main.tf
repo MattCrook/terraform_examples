@@ -3,32 +3,16 @@ terraform {
 }
 
 
-// locals {
-//   http_port    = 80
-//   any_port     = 0
-//   any_protocol = "-1"
-//   tcp_protocol = "tcp"
-//   all_ips      = ["0.0.0.0/0"]
+
+// resource "random_id" "instance_id" {
+//   byte_length = 8
 // }
 
-
-terraform {
-    backend "gcs" {
-        bucket      = "tf-state-mc"
-        prefix      = "global/google_storage/terraform.tfstate"
-        credentials = "./credentials.json"
-        encrypt     = true
-}
-
-resource "random_id" "instance_id" {
-  byte_length = 8
-}
-
-resource "google_service_account" "service_account" {
-  account_id   = "flask-app-vm-${random_id.instance_id.hex}"
-  display_name = "Service Account"
-  project      = var.project_id
-}
+// resource "google_service_account" "service_account" {
+//   account_id   = "flask-app-vm-${random_id.instance_id.hex}"
+//   display_name = "Service Account"
+//   project      = var.project_id
+// }
 
 # Represents an Autoscaler resource.
 # Autoscalers allow you to automatically scale virtual machine instances in managed instance groups
@@ -36,7 +20,7 @@ resource "google_service_account" "service_account" {
 # Equivalent to asg (auto scaling group) resource in aws.
 # Using this to create/manage a cluster of VM's instead of creating a single instance.
 resource "google_compute_autoscaler" "autoscaling_group" {
-  name   = "my-autoscaling_group"
+  name   = "my-autoscaling-group"
   zone   = var.zone
   target = google_compute_instance_group_manager.instance_group_manager.id
 
@@ -56,7 +40,7 @@ resource "google_compute_autoscaler" "autoscaling_group" {
 # Takes care of launching a cluster of instances, monitoring health, replacing failed instances, and ajusting size of cluster in response to load.
 resource "google_compute_instance_template" "my_instance" {
   name        = "my_instance_template"
-  description = "This template is used to create app server instances."
+  description = "This template is used to create app server instances"
 
   tag {
     key                 = "Name"
@@ -88,7 +72,7 @@ resource "google_compute_instance_template" "my_instance" {
   }
 
   metadata = {
-    ssh-keys = "matt.crook11@gmail.com:${file("~/.ssh/id_rsa.pub")}
+    ssh-keys = "matt.crook11@gmail.com:${file("~/.ssh/id_rsa.pub")}"
   }
 
   # Make sure flask is installed on all new instances for later steps
@@ -171,12 +155,12 @@ resource "google_compute_resource_policy" "daily_backup" {
 
 // Google Cloud allows for opening ports to traffic via firewall policies, which can also be managed in Terraform configuration.
 // You can now point the browser to the instance's IP address and port 5000 and see the server running.
-resource "google_compute_firewall" "default" {
-  name    = var.name
-  network = "default"
+// resource "google_compute_firewall" "default" {
+//   name    = var.name
+//   network = "default"
 
-  allow {
-    protocol = "tcp"
-    ports    = ["5000"]
-  }
-}
+//   allow {
+//     protocol = "tcp"
+//     ports    = ["5000"]
+//   }
+// }

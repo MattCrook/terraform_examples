@@ -64,5 +64,5 @@ variable "firewall_name" {
 variable "project_id" {
   description = "The project id of the current project as shown in GCP"
   type        = string
-  defualt     = "flask-app-310119"
+  default     = "flask-app-310119"
 }
