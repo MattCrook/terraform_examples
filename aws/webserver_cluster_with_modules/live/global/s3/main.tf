@@ -1,3 +1,15 @@
+resource "aws_iam_user" "example_iam" {
+    # Every TF resource has a meta-parameter called count. Simple Iteration contruct, simply defines
+    # how many copis of the resouce to create.
+    # Access count.index (like arr[i]) to give each name or iteration a different name.
+    # count = 3
+    # name  = "Brave${count.index}"
+    # This is a better way, saying count is the length of the array "user_names"
+    # and name is each index of the array at variable "user_names"
+    count = length(var.user_names)
+    name  = var.user_names[count.index]
+}
+
 resource "aws_s3_bucket" "tf_state" {
     bucket = var.bucket_name
 

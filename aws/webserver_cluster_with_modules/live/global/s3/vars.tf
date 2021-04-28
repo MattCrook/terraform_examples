@@ -9,3 +9,9 @@ variable "table_name" {
   type        = string
   default     = "tf-up-and-running-locks"
 }
+
+variable "user_names" {
+  description = "Create IAM users with these names"
+  type        = list(string)
+  default     = ["Brave", "Chrome", "Safari"]
+}
