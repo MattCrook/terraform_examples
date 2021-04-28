@@ -24,6 +24,10 @@ terraform {
   # Then, here on staging change the ref to the new release...while keeping prod the same. Once we are satisfied there are no bugs,
   # can update the ref in production.
 
+  # However, when locally on own computer, it is best and faster to have the relative file path.
+  # BEcause you be able to make changes and re run tf plan and apply immedialty, rather than having to commit the code
+  # and publish a new version each time.
+
   # source = "github.com/MattCrook/terraform-examples//aws/webserver_cluster_with_modules/modules/services/webserver-cluster?ref=v0.0.1"
   # SSH URL
   # source = "git@github.com:MattCrook/terraform-examples.git"
