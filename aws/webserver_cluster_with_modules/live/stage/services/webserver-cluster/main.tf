@@ -17,10 +17,18 @@ terraform {
     }
 }
 
+  # When making a change to something in modules/services/webserver-cluster, workflow is:
+  # normal git workflow (add, commit, push to master)
+  # Then to cut a new release, git tag -a "v0.0.0" -m "Message..."
+  # git push --follow-tags -- to push the tagged release to github. 
+  # Then, here on staging change the ref to the new release...while keeping prod the same. Once we are satisfied there are no bugs,
+  # can update the ref in production.
+
+  # source = "github.com/MattCrook/terraform-examples//aws/webserver_cluster_with_modules/modules/services/webserver-cluster?ref=v0.0.1"
+  # SSH URL
+  # source = "git@github.com:MattCrook/terraform-examples.git"
 module "webserver_cluster" {
-  source = "../../../modules/services/webserver-cluster"
-  # source = "github.com/MattCrook/terraform-examples//code/terraform/04-terraform-module/module-example/modules/services/webserver-cluster?ref=v0.1.0"
-  # SSH URL  git@github.com:MattCrook/terraform-examples.git
+  source = "../../../../modules/services/webserver-cluster"
 
   cluster_name           = var.cluster_name
   db_remote_state_bucket = var.db_remote_state_bucket
