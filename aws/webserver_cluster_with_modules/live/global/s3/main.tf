@@ -4,10 +4,17 @@ resource "aws_iam_user" "example_iam" {
     # Access count.index (like arr[i]) to give each name or iteration a different name.
     # count = 3
     # name  = "Brave${count.index}"
+
     # This is a better way, saying count is the length of the array "user_names"
     # and name is each index of the array at variable "user_names"
-    count = length(var.user_names)
-    name  = var.user_names[count.index]
+    # count = length(var.user_names)
+    # name  = var.user_names[count.index]
+
+    # using for_each -- covert to set because for_each only supports sets and maps when used on a resource.
+    # Access each value of current item in loop with each.value.
+    # After terraorm plan, this will output the keys and values, the keys being the keys in for_each (names) and the values being the outputs for that resource.
+    for_each = toset(var.user_names)
+    name     = each.value
 }
 
 resource "aws_s3_bucket" "tf_state" {
