@@ -25,17 +25,22 @@ terraform {
 module "webserver_cluster" {
   source = "../../../modules/services/webserver-cluster"
 
+  project_id             = var.project_id
+  region                 = var.region
+  zone                   = var.zone
   cluster_name           = var.cluster_name
   db_remote_state_bucket = var.db_remote_state_bucket
   db_remote_state_key    = var.db_remote_state_key
   instance_type          = var.instance_type
+  display_name           = var.service_account_display_name
+  description            = var.service_account_description
 }
 
 
 # Google Cloud allows for opening ports to traffic via firewall policies, which can also be managed in Terraform configuration.
 # You can now point the browser to the instance's IP address and port 5000 and see the server running.
 resource "google_compute_firewall" "default" {
-  name          = "flask-app-firewall"
+  name          = var.firewall_name
   network       = "default"
   project       = var.project_id
   source_ranges = ["0.0.0.0/0"]

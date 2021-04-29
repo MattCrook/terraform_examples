@@ -4,15 +4,17 @@ terraform {
 
 
 
-// resource "random_id" "instance_id" {
-//   byte_length = 8
-// }
+resource "random_id" "instance_id" {
+  byte_length = 8
+}
 
-// resource "google_service_account" "service_account" {
-//   account_id   = "flask-app-vm-${random_id.instance_id.hex}"
-//   display_name = "Service Account"
-//   project      = var.project_id
-// }
+resource "google_service_account" "flask_app_sa" {
+  account_id   = "flask-app-${random_id.instance_id.hex}"
+  display_name = var.service_account_display_name
+  project      = var.project_id
+  description  = var.service_account_description
+}
+
 
 # Represents an Autoscaler resource.
 # Autoscalers allow you to automatically scale virtual machine instances in managed instance groups

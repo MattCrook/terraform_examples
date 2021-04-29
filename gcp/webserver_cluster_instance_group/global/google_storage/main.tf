@@ -1,10 +1,9 @@
 provider "google" {
-  project     = var.project_id
-  region      = var.region
-  zone        = var.zone
-  credentials = file("credentials.json")
+    project     = var.project_id
+    region      = var.region
+    zone        = var.zone
+    credentials = file("credentials.json")
 }
-
 
 terraform {
     backend "gcs" {
@@ -13,7 +12,6 @@ terraform {
         credentials = "./credentials.json"
     }
 }
-
 
 # Our gcs bucket to store the state. Will use "gcs" as backend which is this bucket.
 resource "google_storage_bucket" "tf_state" {
@@ -45,14 +43,37 @@ resource "google_storage_bucket" "tf_state" {
     // }
 }
 
+locals {
+    api_set = var.enable_apis ? toset(var.default_apis) : []
+    extra_api_set = var.enable_apis ? toset(var.extra_apis) : []
+}
 
-# Relational database google offers fully managed relational database service designed
-# to offer both strong consistency and horizontal scalability for mission-critical online transaction processing (OLTP) applications.
-// resource "google_spanner_instance" "tf-locks" {
-//   config       = "regional-us-central1"
-//   display_name = var.table_name
-//   num_nodes    = 1
-//   labels = {
-//     "name" = "terraform-locks"
+resource "google_project_service" "extra-webserver-cluster-services" {
+    for_each                   = local.extra_api_set
+    project                    = var.project_id
+    service                    = each.value
+    disable_on_destroy         = var.disable_services_on_destroy
+    disable_dependent_services = var.disable_dependent_services
+}
+
+resource "google_project_iam_member" "webserver_iam_editor" {
+    project  = var.project_id
+    role     = "roles/editor"
+    member   = "user:foo@bar.com"
+}
+
+
+// resource "google_project_iam_policy" "project" {
+//   project     = "your-project-id"
+//   policy_data = data.google_iam_policy.admin.policy_data
+// }
+
+// data "google_iam_policy" "admin" {
+//   binding {
+//     role = "roles/editor"
+
+//     members = [
+//       "user:jane@example.com",
+//     ]
 //   }
 // }

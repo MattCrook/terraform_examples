@@ -66,3 +66,14 @@ variable "project_id" {
   type        = string
   default     = "flask-app-310119"
 }
+
+
+variable "service_account_display_name" {
+  description = "The Service Account name displayed in GCP"
+  type        = string
+}
+
+variable "service_account_description" {
+  description = "The description displayed in GCP"
+  type        = string
+}

@@ -39,3 +39,21 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "firewall_name" {
+  description = "Name of the google_compute_firewall.default firewall"
+  type        = string
+  default     = "flask-app-firewall"
+}
+
+variable "service_account_display_name" {
+  description = "The Service Account name displayed in GCP"
+  type        = string
+  default     = "flask-app-dev-sa"
+}
+
+variable "service_account_description" {
+  description = "The description displayed in GCP"
+  type        = string
+  default     = "Service account for webserver-cluster dev envrionment"
+}

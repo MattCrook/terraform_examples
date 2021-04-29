@@ -39,3 +39,32 @@ variable "encryption_key_names" {
   type        = map(string)
   default     = {}
 }
+
+variable "enable_apis" {
+  default     = "true"
+}
+
+variable "default_apis" {
+  type        = list(string)
+  default = []
+}
+
+variable "extra_apis" {
+  type        = list(string)
+  default = [
+    "cloudresourcemanager.googleapis.com",
+    "iam.googleapis.com",
+    "serviceusage.googleapis.com",
+    "iamcredentials.googleapis.com"
+    ]
+}
+
+variable "disable_services_on_destroy" {
+  default     = "true"
+  type        = string
+}
+
+variable "disable_dependent_services" {
+  default     = "true"
+  type        = string
+}

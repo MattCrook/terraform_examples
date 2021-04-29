@@ -20,7 +20,6 @@ output "brave_arn" {
      value       = aws_iam_user.example_iam
 
      # Output each arn within the map.
-     value       = values(aws_iam_user.example_iam[*].arn
-
+     value       = values(aws_iam_user.example_iam[*].arn)
      description = "The ARNs for all iam users"
  }
