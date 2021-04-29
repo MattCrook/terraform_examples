@@ -75,6 +75,6 @@ resource "google_service_account_iam_binding" "google-storage-bucket-account-iam
   role    = "roles/storage.admin"
 
   members = [
-    "serviceAccount:${module.webserver_cluster.service_account.name}"
+    "serviceAccount:${google_service_account.google_storage_sa.email}"
   ]
 }
