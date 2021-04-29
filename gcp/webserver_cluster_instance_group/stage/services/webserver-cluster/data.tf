@@ -7,6 +7,10 @@ data "terraform_remote_state" "db" {
     }
 }
 
+data "google_compute_default_service_account" "default" {
+}
+
+
 // data "google_compute_network" "default" {
 //   name = "default-network"
 // }

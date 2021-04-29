@@ -48,6 +48,8 @@ locals {
     extra_api_set = var.enable_apis ? toset(var.extra_apis) : []
 }
 
+
+# Enabling a Google service / API with Terraform.
 resource "google_project_service" "extra-webserver-cluster-services" {
     for_each                   = local.extra_api_set
     project                    = var.project_id
@@ -56,24 +58,23 @@ resource "google_project_service" "extra-webserver-cluster-services" {
     disable_dependent_services = var.disable_dependent_services
 }
 
-resource "google_project_iam_member" "webserver_iam_editor" {
-    project  = var.project_id
-    role     = "roles/editor"
-    member   = "user:foo@bar.com"
+
+resource "random_id" "instance_id" {
+  byte_length = 8
 }
 
+resource "google_service_account" "google_storage_sa" {
+  account_id   = "google-storage-sa-${random_id.instance_id.hex}"
+  display_name = "Google Storage Admin Service Account"
+  project      = var.project_id
+  description  = "Google Storage Bucket admin service account to view and edit resources"
+}
 
-// resource "google_project_iam_policy" "project" {
-//   project     = "your-project-id"
-//   policy_data = data.google_iam_policy.admin.policy_data
-// }
+resource "google_service_account_iam_binding" "google-storage-bucket-account-iam" {
+  project = var.project_id
+  role    = "roles/storage.admin"
 
-// data "google_iam_policy" "admin" {
-//   binding {
-//     role = "roles/editor"
-
-//     members = [
-//       "user:jane@example.com",
-//     ]
-//   }
-// }
+  members = [
+    "serviceAccount:${module.webserver_cluster.service_account.name}"
+  ]
+}

@@ -9,7 +9,7 @@ resource "random_id" "instance_id" {
 }
 
 resource "google_service_account" "flask_app_sa" {
-  account_id   = "flask-app-${random_id.instance_id.hex}"
+  account_id   = "flask-app-sa-${random_id.instance_id.hex}"
   display_name = var.service_account_display_name
   project      = var.project_id
   description  = var.service_account_description
@@ -153,16 +153,3 @@ resource "google_compute_resource_policy" "daily_backup" {
     }
   }
 }
-
-
-// Google Cloud allows for opening ports to traffic via firewall policies, which can also be managed in Terraform configuration.
-// You can now point the browser to the instance's IP address and port 5000 and see the server running.
-// resource "google_compute_firewall" "default" {
-//   name    = var.name
-//   network = "default"
-
-//   allow {
-//     protocol = "tcp"
-//     ports    = ["5000"]
-//   }
-// }

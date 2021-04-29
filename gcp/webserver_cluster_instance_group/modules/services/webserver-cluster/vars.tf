@@ -74,6 +74,6 @@ variable "service_account_display_name" {
 }
 
 variable "service_account_description" {
-  description = "The description displayed in GCP"
+  description = "Service account for webserver-cluster in flask app project dev environment"
   type        = string
 }

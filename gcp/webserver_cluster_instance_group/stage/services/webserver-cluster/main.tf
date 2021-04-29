@@ -36,6 +36,13 @@ module "webserver_cluster" {
   description            = var.service_account_description
 }
 
+resource "google_compute_network" "flask-app-vpc-network" {
+  name                    = "vpc-network"
+  auto-create-subnetworks = true
+  project                 = var.project_id
+  routing_mode            = "REGIONAL"
+  mtu                     = 1500
+}
 
 # Google Cloud allows for opening ports to traffic via firewall policies, which can also be managed in Terraform configuration.
 # You can now point the browser to the instance's IP address and port 5000 and see the server running.
@@ -50,3 +57,35 @@ resource "google_compute_firewall" "default" {
     ports    = ["5000", "80"]
   }
 }
+
+variable project_name { default = "flask-app" }
+
+resource "google_compute_firewall" "firewall-ssh-builder-access-router" {
+  project   = "${var.project_id}"
+  name      = "flask-app-ssh-builder-access-router"
+  network   = "${google_compute_network.flask-app-vpc-network.name}"
+  priority  = "1000"
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["5000"]
+  }
+
+  source_ranges           = ["0.0.0.0/0"]
+  target_service_accounts = ["${module.webserver_cluster.service_account.email}"]
+}
+
+# Allow SA service account use the default GCE account
+resource "google_service_account_iam_member" "gce-default-account-iam" {
+  service_account_id = data.google_compute_default_service_account.default.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${module.webserver_cluster.service_account.name}"
+}
+
+
+// resource "google_service_account_iam_member" "admin-account-iam" {
+//   service_account_id = "${module.webserver_cluster.service_account.email}"
+//   role               = "roles/iam.serviceAccountUser"
+//   member             = "user:jane@example.com"
+// }
