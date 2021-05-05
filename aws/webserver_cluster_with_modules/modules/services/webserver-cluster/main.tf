@@ -48,6 +48,18 @@ resource "aws_autoscaling_group" "my_instance_asg" {
         value               = var.cluster_name
         propagate_at_launch = true
     }
+
+    # Going to dynamically loop over the "custom_tags" var, which is a map, and plug into the key and value the k,v pair from the map.
+    # dynamic "tag" - tag is the name var name, for the iteration on var.custom tags, and each iterable is a map so we can get tag.key and tag.value
+    dynamic "tag" {
+        for_each = var.custom_tags
+
+        content {
+            key                 = tag.key
+            value               = tag.value
+            propagate_at_launch = true
+        }
+    }
 }
 
 # By defult AWS does not allow incoming and outgoing traffic on EC2 instance.

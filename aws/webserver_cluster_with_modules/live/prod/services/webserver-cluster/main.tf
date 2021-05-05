@@ -15,8 +15,8 @@ terraform {
 
 module "webserver_cluster" {
   source = "../../../modules/services/webserver-cluster"
-  # source = "github.com/MattCrook/terraform-examples//code/terraform/04-terraform-module/module-example/modules/services/webserver-cluster?ref=v0.1.0"
-  # SSH URL  git@github.com:MattCrook/terraform-examples.git
+  # source = "github.com/MattCrook/terraform_examples/aws/webserver_cluster_with_modules/modules/services/webserver-cluster?ref=v0.1.0"
+  # SSH URL  git@github.com:MattCrook/terraform_examples/aws/webserver_cluster_with_modules/modules/services/webserver-cluster.git?ref=v0.1.0
 
   cluster_name           = var.cluster_name
   db_remote_state_bucket = var.db_remote_state_bucket
@@ -25,6 +25,14 @@ module "webserver_cluster" {
   instance_type = "m4.large"
   min_size      = 2
   max_size      = 10
+
+  # Custom tags set, vars in modules/services/websever-cluster
+  # Owner specifies the team that owns this ASG
+  # DeployedBy tag specifies that this infrustructure was deployed using Terraform, and shoulde not be modified manually.
+  custom_tags = {
+    Owner      = "team-of-ownership"
+    DeployedBy = "terraform
+  }
 }
 
 

@@ -57,3 +57,11 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+# To allow users to specify custom tags
+# (Tags set in the production env for examples..)
+variable "custom_tags" {
+  description = "Custom tags to set on the Instances in the ASG"
+  type        = map(string)
+  default     = {}
+}
