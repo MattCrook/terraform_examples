@@ -13,6 +13,15 @@ terraform {
     }
 }
 
+// data "terraform_remote_state" "project" {
+//     backend = "gcs"
+
+//     config = {
+//         bucket = "tf-up-and-running-state-mc"
+//         prefix = 
+//     }
+// }
+
 # Our gcs bucket to store the state. Will use "gcs" as backend which is this bucket.
 resource "google_storage_bucket" "tf_state" {
     name          = var.bucket_name
@@ -59,22 +68,37 @@ resource "google_project_service" "extra-webserver-cluster-services" {
 }
 
 
-resource "random_id" "instance_id" {
-  byte_length = 8
-}
+// resource "random_id" "instance_id" {
+//   byte_length = 8
+// }
 
+# Creates a random string, the length you specify. Can be accessed with random_string.password.result
+// resource "random_string" "password" {
+//   length = 16
+//   special = true
+// }
+
+# Creates a service account for the Google cloud storage to run on, and this account can now be given permissions
+# To what resouces it can access. 
 resource "google_service_account" "google_storage_sa" {
-  account_id   = "google-storage-sa-${random_id.instance_id.hex}"
-  display_name = "Google Storage Admin Service Account"
-  project      = var.project_id
-  description  = "Google Storage Bucket admin service account to view and edit resources"
+    # the accoount id is what will prepend the email. So this will be "google-storage-sa-1234@flask-app-310119.iam.gserviceaccount.com".
+    account_id   = "google-storage-sa-1234"
+    display_name = "Google Storage Admin Service Account"
+    project      = var.project_id
+    description  = "Google Storage Bucket admin service account to view and edit resources"
 }
 
-resource "google_service_account_iam_binding" "google-storage-bucket-account-iam" {
-  project = var.project_id
-  role    = "roles/storage.admin"
-
-  members = [
-    "serviceAccount:${google_service_account.google_storage_sa.email}"
-  ]
+# To create a key for the service account which allows the use of a service account outside of Google Cloud.
+resource "google_service_account_key" "google_storage_sa_key" {
+    service_account_id = google_service_account.google_storage_sa.email
+    public_key_type    = "TYPE_X509_PEM_FILE"
 }
+
+// resource "google_service_account_iam_binding" "google-storage-bucket-account-iam" {
+//   service_account_id = data.terraform_remote_state.project.outputs.google_storage_sa
+//   role    = "roles/storage.admin"
+
+//   members = [
+//     "serviceAccount:${google_service_account.google_storage_sa.email}"
+//   ]
+// }

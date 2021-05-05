@@ -17,14 +17,14 @@ variable "db_remote_state_key" {
   default     = "stage/data-stores/cloudsql/terraform.tfstate"
 }
 
-variable "min_size" {
-  description = "The minimum number of EC2 Instances in the ASG"
+variable "min_replicas" {
+  description = "The minimum number of google_compute_autoscaler Instances in the ASG"
   type        = number
   default     = 2
 }
 
-variable "max_size" {
-  description = "The maximum number of EC2 Instances in the ASG"
+variable "max_replicas" {
+  description = "The maximum number of google_compute_autoscaler Instances in the ASG"
   type        = number
   default     = 5
 }
@@ -76,4 +76,14 @@ variable "service_account_display_name" {
 variable "service_account_description" {
   description = "Service account for webserver-cluster in flask app project dev environment"
   type        = string
+}
+
+variable "role" {
+  description = "Service account role"
+  type        = string
+}
+
+variable "members" {
+  description = "Service account list of members"
+  type        = list
 }

@@ -15,6 +15,11 @@ resource "google_service_account" "flask_app_sa" {
   description  = var.service_account_description
 }
 
+resource "google_service_account_iam_binding" "iam-binding" {
+  service_account_id = google_service_account.flask_app_sa.email
+  role               = var.role
+  members            = var.members
+}
 
 # Represents an Autoscaler resource.
 # Autoscalers allow you to automatically scale virtual machine instances in managed instance groups
@@ -27,8 +32,8 @@ resource "google_compute_autoscaler" "autoscaling_group" {
   target = google_compute_instance_group_manager.instance_group_manager.id
 
   autoscaling_policy {
-    max_replicas    = var.max_size
-    min_replicas    = var.min_size
+    max_replicas    = var.max_replicas
+    min_replicas    = var.min_replicas
     cooldown_period = 60
 
     cpu_utilization {

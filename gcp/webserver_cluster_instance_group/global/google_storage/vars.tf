@@ -68,3 +68,16 @@ variable "disable_dependent_services" {
   default     = "true"
   type        = string
 }
+
+# For remote state data source
+variable "db_remote_state_bucket" {
+  description = "The name of the Cloud Storage bucket used for the database's remote state storage"
+  type        = string
+  default     = "tf-state-mc"
+}
+
+variable "db_remote_state_key" {
+  description = "The name of the key in the Cloud Storage bucket used for the database's remote state storage"
+  type        = string
+  default     = "stage/data-stores/cloudsql/terraform.tfstate"
+}
