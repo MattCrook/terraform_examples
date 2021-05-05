@@ -2,3 +2,4 @@
 *.tfstate
 *.tfstate.*
 credentials.json*
+credentials.secret*

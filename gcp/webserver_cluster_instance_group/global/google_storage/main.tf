@@ -18,7 +18,8 @@ terraform {
 
 //     config = {
 //         bucket = "tf-up-and-running-state-mc"
-//         prefix = 
+//         prefix = "global/google_storage"
+//         credentials = "./credentials.json"
 //     }
 // }
 
@@ -57,7 +58,6 @@ locals {
     extra_api_set = var.enable_apis ? toset(var.extra_apis) : []
 }
 
-
 # Enabling a Google service / API with Terraform.
 resource "google_project_service" "extra-webserver-cluster-services" {
     for_each                   = local.extra_api_set
@@ -66,17 +66,6 @@ resource "google_project_service" "extra-webserver-cluster-services" {
     disable_on_destroy         = var.disable_services_on_destroy
     disable_dependent_services = var.disable_dependent_services
 }
-
-
-// resource "random_id" "instance_id" {
-//   byte_length = 8
-// }
-
-# Creates a random string, the length you specify. Can be accessed with random_string.password.result
-// resource "random_string" "password" {
-//   length = 16
-//   special = true
-// }
 
 # Creates a service account for the Google cloud storage to run on, and this account can now be given permissions
 # To what resouces it can access. 
@@ -94,11 +83,22 @@ resource "google_service_account_key" "google_storage_sa_key" {
     public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
+
 // resource "google_service_account_iam_binding" "google-storage-bucket-account-iam" {
 //   service_account_id = data.terraform_remote_state.project.outputs.google_storage_sa
-//   role    = "roles/storage.admin"
+//   role               = "roles/storage.admin"
 
 //   members = [
 //     "serviceAccount:${google_service_account.google_storage_sa.email}"
 //   ]
+// }
+
+// resource "random_id" "instance_id" {
+//   byte_length = 8
+// }
+
+# Creates a random string, the length you specify. Can be accessed with random_string.password.result
+// resource "random_string" "password" {
+//   length = 16
+//   special = true
 // }
