@@ -218,6 +218,10 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_utilization" {
 
 # Cloudwatch alarm that will go off if your CPU credits are low - meaning the webserver-cluster is almost out of CPU credits.
 resource "aws_cloudwatch_metric_alarm" "low_cpu_credit_balance" {
+    # cpu credits only apply to txxx instance types.
+    # Using the format() funtion to extract just the first character to check if it is "t".
+    count = format("%.1s", var.instance_type) == "t" ? 1 : 0
+
     alarm_name  = "${var.cluster_name}-low-cpu-credit-balance"
     namespace   = "AWS/EC2"
     metric_name = "CPUCreditBalance"

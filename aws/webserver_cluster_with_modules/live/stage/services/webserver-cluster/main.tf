@@ -38,9 +38,10 @@ module "webserver_cluster" {
   db_remote_state_bucket = var.db_remote_state_bucket
   db_remote_state_key    = var.db_remote_state_key
 
-  instance_type = "t2.micro"
-  min_size      = 2
-  max_size      = 10
+  instance_type          = "t2.micro"
+  min_size               = 2
+  max_size               = 10
+  enable_autoscaling     = false
 }
 
 # Now that we have split up the the ingress and egress security group rules (modules/services/webserver-cluster & outputs), we can add custom rules from outside the module.
