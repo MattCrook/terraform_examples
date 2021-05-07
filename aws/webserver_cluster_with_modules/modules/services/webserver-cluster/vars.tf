@@ -65,3 +65,10 @@ variable "custom_tags" {
   type        = map(string)
   default     = {}
 }
+
+# Boolean input variable that we can use to specify wheather the module should enable auto-scaling
+# Way to conditionally create auto-scaling for some users but not for others.
+variable "enable_autoscaling" {
+  description = "If set to true, enable auto scaling"
+  type        = bool
+}
