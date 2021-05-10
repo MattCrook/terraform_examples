@@ -42,6 +42,7 @@ module "webserver_cluster" {
   min_size               = 2
   max_size               = 10
   enable_autoscaling     = false
+  enable_new_user_data   = true
 }
 
 # Now that we have split up the the ingress and egress security group rules (modules/services/webserver-cluster & outputs), we can add custom rules from outside the module.
