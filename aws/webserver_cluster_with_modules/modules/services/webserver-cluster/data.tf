@@ -64,8 +64,26 @@ data "aws_ami" "ubuntu" {
 // }
 
 # Need a path relative to the module itself
+# Use count as makeshift if/else statement...if var.enable_new_user_data is false use the user-data, if true use the user-data-short.
 data "template_file" "user_data" {
+  count = var.enable_new_user_data ? 0 : 1
+
   template = file("${path.module}/user-data.sh")
+
+ # These variables go into the script as ${db_address} etc...
+  vars = {
+    server_port = var.server_port
+    db_address  = data.terraform_remote_state.db.outputs.address
+    db_port     = data.terraform_remote_state.db.outputs.port
+  }
+}
+
+# To use the new user-data script, we need a new template_file data source. 
+# We want to allow some of our webserver-clusters to use this alternative, shorter script. 
+data "template_file" "user_data_short" {
+  count = var.enable_new_user_data ? 1 : 0
+
+  template = file("${path.module}/user-data-short.sh")
 
  # These variables go into the script as ${db_address} etc...
   vars = {

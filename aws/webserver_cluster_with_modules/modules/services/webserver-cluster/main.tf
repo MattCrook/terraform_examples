@@ -18,7 +18,16 @@ resource "aws_launch_configuration" "my_instance" {
     image_id               = data.aws_ami.ubuntu.id
     instance_type          = var.instance_type
     security_groups        = [aws_security_group.instance.id]
-    user_data              = data.template_file.user_data.rendered
+    # user_data              = data.template_file.user_data.rendered
+
+    # Both template_file data sources are array, because use count parameter. However, can't use array syntax,
+    # becuse one might be empty, so use splat sytax - which will always return an array (albeit maybe zero) and check the length of that array.
+    # Looking for a length of greater than 0, otherwise evalute the second part of ternary. 
+    user_data = (
+        length(data.template_file.user_data[*]) > 0
+          ? data.template_file.user-data[0].rendered
+          : data.template_file.user-data-short[0].rendered
+    )
 
     # Required when using a launch configuration with auto scaling group.
     # When true, TF will invert order in which it replaces recourses,
