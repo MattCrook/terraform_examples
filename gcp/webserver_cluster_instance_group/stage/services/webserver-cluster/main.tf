@@ -36,12 +36,17 @@ module "webserver_cluster" {
   description            = var.service_account_description
 }
 
+# Manages a VPC network or legacy network resource on GCP.
+# auto-create-subnetworks- When set to true, the network is created in "auto subnet mode" and it will create a subnet for each
+# region automatically across the 10.128.0.0/9 address range.
+# When set to false, the network is created in "custom subnet mode" so the user can explicitly connect subnetwork resources.
 resource "google_compute_network" "flask-app-vpc-network" {
-  name                    = "vpc-network"
-  auto-create-subnetworks = true
-  project                 = var.project_id
-  routing_mode            = "REGIONAL"
-  mtu                     = 1500
+  name                            = "vpc-network"
+  auto-create-subnetworks         = true
+  project                         = var.project_id
+  routing_mode                    = "REGIONAL"
+  mtu                             = 1500
+  delete_default_routes_on_create = false
 }
 
 # Google Cloud allows for opening ports to traffic via firewall policies, which can also be managed in Terraform configuration.
@@ -77,11 +82,11 @@ resource "google_compute_firewall" "firewall-ssh-builder-access-router" {
 }
 
 # Allow SA service account use the default GCE account
-resource "google_service_account_iam_member" "gce-default-account-iam" {
-  service_account_id = data.google_compute_default_service_account.default.name
-  role               = "roles/iam.serviceAccountUser"
-  member             = "serviceAccount:${module.webserver_cluster.service_account.name}"
-}
+// resource "google_service_account_iam_member" "gce-default-account-iam" {
+//   service_account_id = data.google_compute_default_service_account.default.name
+//   role               = "roles/iam.serviceAccountUser"
+//   member             = "serviceAccount:${module.webserver_cluster.service_account.name}"
+// }
 
 
 // resource "google_service_account_iam_member" "admin-account-iam" {

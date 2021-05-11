@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.12, < 0.13"
-}
-
 variable "names" {
   description = "A list of names"
   type        = list(string)

@@ -31,29 +31,34 @@ terraform {
   # source = "github.com/MattCrook/terraform-examples//aws/webserver_cluster_with_modules/modules/services/webserver-cluster?ref=v0.0.1"
   # SSH URL
   # source = "git@github.com:MattCrook/terraform-examples.git"
+
 module "webserver_cluster" {
-  source = "../../../../modules/services/webserver-cluster"
+    source = "../../../../modules/services/webserver-cluster"
 
-  cluster_name           = var.cluster_name
-  db_remote_state_bucket = var.db_remote_state_bucket
-  db_remote_state_key    = var.db_remote_state_key
+    ami         = "ami-0c55b159cbfafe1f0"
+    # Changing the server text to something new.
+    server_text = "New Server Text"
 
-  instance_type          = "t2.micro"
-  min_size               = 2
-  max_size               = 10
-  enable_autoscaling     = false
-  enable_new_user_data   = true
+    cluster_name           = var.cluster_name
+    db_remote_state_bucket = var.db_remote_state_bucket
+    db_remote_state_key    = var.db_remote_state_key
+
+    instance_type          = "t2.micro"
+    min_size               = 2
+    max_size               = 10
+    enable_autoscaling     = false
+    enable_new_user_data   = true
 }
 
 # Now that we have split up the the ingress and egress security group rules (modules/services/webserver-cluster & outputs), we can add custom rules from outside the module.
 # For example, if we had a staging env, and needed to expose an extra port just for testing.
 # Add this rule to do that
 resource "aws_security_group_rule" "allow_testing_inbound" {
-  type              = "ingress"
-  security_group_id = module.webserver_cluster.alb_security_group_id
+    type              = "ingress"
+    security_group_id = module.webserver_cluster.alb_security_group_id
 
-  from_port   = 12345
-  to_port     = 12345
-  protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 12345
+    to_port     = 12345
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
 }

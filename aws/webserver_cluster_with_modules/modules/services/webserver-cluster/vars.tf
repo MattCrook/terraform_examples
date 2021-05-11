@@ -16,24 +16,6 @@ variable "server_port" {
   default     = 8080
 }
 
-// variable "alb_name" {
-//   description = "The name of the ALB"
-//   type        = string
-//   default     = "terraform-asg-example"
-// }
-
-// variable "instance_security_group_name" {
-//   description = "The name of the security group for the EC2 Instances"
-//   type        = string
-//   default     = "terraform-example-instance"
-// }
-
-// variable "alb_security_group_name" {
-//   description = "The name of the security group for the ALB"
-//   type        = string
-//   default     = "terraform-example-alb"
-// }
-
 variable "cluster_name" {
     description = "The name to use for all the cluster resources"
     type        = string
@@ -73,7 +55,25 @@ variable "enable_autoscaling" {
   type        = bool
 }
 
-variable "enable_new_user_data" {
-  description = "If set to true, use the new (short) User Data script"
-  type        = bool
+# Commented out for now, but can use with the 2 various user-data scipts to allow the user to select which one to use.
+# Implemented with if/else statement in data.tf
+// variable "enable_new_user_data" {
+//   description = "If set to true, use the new (short) User Data script"
+//   type        = bool
+// }
+
+# For zero-downtime depoyment. In the real world, exposing the AMI as an input varible would be all you need, as
+# actual code would be defined in the AMI.
+# However in this project, the AMI is just a vanilla Ubuntu image and the code is actually the user-data script.
+variable "ami" {
+  description = "The AMI to run in the cluster"
+  default     = "ami-0c55b159cbfafe1f0"
+  type        = string
+}
+
+# Additional variable to control the text the user data script from its one-liner HTTP server.
+variable "server_text" {
+  description = "The text the web server should return"
+  default     = "Hello, Terraform"
+  type        = string
 }

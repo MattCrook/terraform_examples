@@ -1,12 +1,11 @@
-terraform {
-  required_version = ">= 0.12, < 0.13"
-}
-
 variable "name" {
   description = "A name to render"
   type        = string
 }
 
+# %{if <condition>}<trueval>%{endif}
+# If run tf apply -var name="World" with this, you get the output "Hello, World".
+# Sticking the trueval or (unnamed) into the place of the output.
 output "if_else_directive" {
   value = "Hello, %{ if var.name != "" }${var.name}%{ else }(unnamed)%{ endif }"
 }

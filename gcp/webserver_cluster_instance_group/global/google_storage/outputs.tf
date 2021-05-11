@@ -35,6 +35,6 @@ output "google_storage_sa_private_key" {
 }
 
 output "google_storage_sa_public_key" {
-    description = "The public key, base64 encoded"
+    description = "The public key, of the service account, base64 encoded"
     value       = google_service_account_key.google_storage_sa_key.public_key
 }

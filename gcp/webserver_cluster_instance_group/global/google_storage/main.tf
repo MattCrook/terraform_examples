@@ -59,6 +59,8 @@ locals {
 }
 
 # Enabling a Google service / API with Terraform.
+# loops through (for_each) extra_api_setnlocal which checks if enable_apis is true, then references the var extra_apis which is list (array) of extra gcp api's
+# to enable for a resource/ service account etc...
 resource "google_project_service" "extra-webserver-cluster-services" {
     for_each                   = local.extra_api_set
     project                    = var.project_id
