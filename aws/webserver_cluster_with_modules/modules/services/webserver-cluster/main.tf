@@ -39,19 +39,25 @@ resource "aws_launch_configuration" "my_instance" {
     }
 }
 
-
+# Zero downtime deployment - configure name parameer of the ASG to depend directly on the name of the launch configuration.
+# Each time the lauch configuration changes (which it will when you update the AMI or User Data) its name changes, and therefor
+# the ASG's name will change, which forces TF to replce the ASG
+# Set create_before_destroy to true
+# Set min_elb_capacity parameter of the ASG to min_size of the cluster so that TF will wait for at least that many servers from the new ASG to pass
+# health checks in the ALB before it will begin destroying the original ASG.
 resource "aws_autoscaling_group" "my_instance_asg" {
+    name                 = "${var.cluster_name} - ${aws_launch_configuration.my_instance.name}"
     launch_configuration = aws_launch_configuration.my_instance.name
-    vpc_zone_identifier = data.aws_subnet_ids.default.ids
-    target_group_arns = [aws_lb_target_group.asg.arn]
+    vpc_zone_identifier  = data.aws_subnet_ids.default.ids
+    target_group_arns    = [aws_lb_target_group.asg.arn]
 
     # Defualt health_check type is "EC2". Minimal health check that considers an instance unhealthy only if the AWS hypervisor says
     # the VM instance is completely down or unreachable.
     # The ELB health check is more robust bc it instructs the ASG to use the target group's health check.
     health_check_type = "ELB"
-
-    min_size = var.min_size
-    max_size = var.max_size
+    min_size          = var.min_size
+    max_size          = var.max_size
+    min_elb_capacity  = var.min_size
 
     tag {
         key                 = "Name"
