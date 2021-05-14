@@ -79,8 +79,8 @@ data "template_file" "user_data" {
   }
 }
 
-# To use the new user-data script, we need a new template_file data source. 
-# We want to allow some of our webserver-clusters to use this alternative, shorter script. 
+# To use the new user-data script, we need a new template_file data source.
+# We want to allow some of our webserver-clusters to use this alternative, shorter script.
 // data "template_file" "user_data_short" {
 //   count = var.enable_new_user_data ? 1 : 0
 
@@ -93,3 +93,6 @@ data "template_file" "user_data" {
 //     db_port     = data.terraform_remote_state.db.outputs.port
 //   }
 // }
+
+# All Availablitlity zones in the current AWS region.
+data "aws_availablilty_zones" "all" {}
