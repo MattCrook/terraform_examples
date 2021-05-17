@@ -18,44 +18,6 @@ terraform {
     }
 }
 
-# Created in global/s3/main.tf - Creating the S3 bucket to store the state files in.
-# resource "aws_s3_bucket" "tf_state" {
-#     bucket = "tf-up-and-running-state-mc"
-
-#     lifecycle {
-#         prevent_destroy = true
-#     }
-
-#     versioning {
-#         enabled = true
-#     }
-
-#     server_side_encryption_configuration {
-#         rule {
-#             apply_server_side_encryption_by_default {
-#                 sse_algorithm = "AES256"
-#             }
-#         }
-#     }
-# }
-
-# DynamoBD tabe is AWS's distributed key value store, used for locking.
-# Supports strongy conistant reads and conditional writes.  Need this to ensure you have a distributed lock system.
-# Created in global/s3/main.tf
-// resource "aws_dynamodb_table" "terraform_locks" {
-//     name            = "tf-up-and-running-locks"
-//     billing_mode    = "PAY_PER_REQUEST"
-//     hash_key        = "LockID"
-
-//     attribute {
-//         name = "LockID"
-//         type = "S"
-//     }
-// }
-
-
-
-
 # To use ASG (Auto Scaling Group) replace the "aws_instance" with the following.
 # ASG takes care of launching a cluster or EC2 instances, monitoring health, replacing failed instances, and ajusting size of cluster in response to load.
 resource "aws_launch_configuration" "my_instance" {

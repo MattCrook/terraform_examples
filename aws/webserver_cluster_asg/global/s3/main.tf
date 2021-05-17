@@ -1,3 +1,4 @@
+# S3 bucket to store the state file in.
 resource "aws_s3_bucket" "tf_state" {
     bucket = var.bucket_name
 
@@ -25,6 +26,8 @@ resource "aws_s3_bucket" "tf_state" {
     }
 }
 
+# DynamoBD tabe is AWS's distributed key value store, used for locking.
+# Supports strongy conistant reads and conditional writes.  Need this to ensure you have a distributed lock system.
 resource "aws_dynamodb_table" "terraform_locks" {
     name            = var.table_name
     billing_mode    = "PAY_PER_REQUEST"
