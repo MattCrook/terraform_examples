@@ -1,23 +1,25 @@
 # Every TF resource has a meta-parameter called count. Simple Iteration contruct, simply defines
 # how many copis of the resouce to create.
 # Access count.index (like arr[i]) to give each name or iteration a different name.
+# resource "aws_iam_user" "example_iam" {
 # count = 3
 # name  = "Brave${count.index}"
+# }
 
 # This is a better way, saying count is the length of the array "user_names"
 # and name is each index of the array at variable "user_names"
-# count = length(var.user_names)
-# name  = var.user_names[count.index]
+resource "aws_iam_user" "example_iam" {
+  count = length(var.user_names)
+  name  = var.user_names[count.index]
+}
 
 # using for_each -- covert to set because for_each only supports sets and maps when used on a resource.
 # Access each value of current item in loop with each.value.
 # After terraorm plan, this will output the keys and values, the keys being the keys in for_each (names) and the values being the outputs for that resource.
-
-
-resource "aws_iam_user" "example_iam" {
-    for_each = toset(var.user_names)
-    name     = each.value
-}
+// resource "aws_iam_user" "example_iam" {
+//     for_each = toset(var.user_names)
+//     name     = each.value
+// }
 
 
 # IAM policy that allows read-only access to Cloudwatch
@@ -43,13 +45,13 @@ resource "aws_iam_policy" "cloudwatch_full_access" {
 resource "aws_iam_user_policy_attachment" "brave_cloudwatch_full_access" {
   count = var.give_brave_cloudwatch_full_access ? 1 : 0
 
-  user       = aws_iam_user.example[0].name
+  user       = aws_iam_user.example_iam[0].name
   policy_arn = aws_iam_policy.cloudwatch_full_access.arn
 }
 
 resource "aws_iam_user_policy_attachment" "brave_cloudwatch_read_only" {
   count = var.give_brave_cloudwatch_full_access ? 0 : 1
 
-  user       = aws_iam_user.example[0].name
+  user       = aws_iam_user.example_iam[0].name
   policy_arn = aws_iam_policy.cloudwatch_read_only.arn
 }

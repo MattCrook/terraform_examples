@@ -15,12 +15,12 @@ output "brave_arn" {
 
 output "all_arns" {
      # Used when resource is an array (using count)
-     # value       = aws_iam_user.example_iam[*].arn
+     value       = aws_iam_user.example_iam[*].arn
 
      # When resouce is a map (using for_each)
      # value       = aws_iam_user.example_iam
 
      # Output each arn within the map.
-     value       = values(aws_iam_user.example_iam[*].arn)
+     # value       = values(aws_iam_user.example_iam[*].arn)
      description = "The ARNs for all iam users"
  }
