@@ -12,7 +12,8 @@ output "brave_arn" {
     value       = aws_iam_user.example_iam[0].arn
     description = "The ARN for user Brave"
 }
- output "all_arns" {
+
+output "all_arns" {
      # Used when resource is an array (using count)
      # value       = aws_iam_user.example_iam[*].arn
 
