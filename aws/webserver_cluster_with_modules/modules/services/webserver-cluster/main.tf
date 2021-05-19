@@ -82,15 +82,15 @@ resource "aws_autoscaling_group" "my_instance_asg" {
     # Can implement arbitrary conditional logic by filtering the values in the for expression.
     dynamic "tag" {
         for_each = {
-            for key, value in var.custom_tags:
-            key => upper(value)
-            if != "Name"
+        for key, value in var.custom_tags:
+        key => upper(value)
+        if key != "Name"
         }
 
         content {
-            key                 = tag.key
-            value               = tag.value
-            propagate_at_launch = true
+        key                 = tag.key
+        value               = tag.value
+        propagate_at_launch = true
         }
     }
 }
@@ -200,35 +200,6 @@ resource "aws_lb_listener_rule" "asg" {
         type             = "forward"
         target_group_arn = aws_lb_target_group.asg.arn
     }
-}
-
-# Setting count to 1 on a resoucre you get one copy of the resouce, settin it to zero the resource is not created at all.
-# If var.enable_autoscaling is set to true, then count parameter will be set to 1.
-# Because variable is in both and we have separated these resouces by scale up and down, only changing the var from true or false 
-# Will either create one of each, or not create either.
-resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
-    count = var.enable_autoscaling ? 1 : 0
-
-    scheduled_action_name = "scale-out-during-business-hours"
-    min_size              = 2
-    max_size              = 10
-    desired_capacity      = 10
-    recurrence            = "0 9 * * *"
-
-    autoscaling_group_name = module.webserver_cluster.asg_name
-}
-
-
-resource "aws_autoscaling_schedule" "scale_in_at_night" {
-    count = var.enable_autoscaling ? 1 : 0
-
-    scheduled_action_name = "scale-in-at-night"
-    min_size              = 2
-    max_size              = 10
-    desired_capacity      = 2
-    recurrence            = "0 17 * * *"
-
-    autoscaling_group_name = module.webserver_cluster.asg_name
 }
 
 # Cloudwatch alarm - notify you via a variety of mechanisms if a specific metric exceeds a predefined threshold.

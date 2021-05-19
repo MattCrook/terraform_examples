@@ -41,7 +41,7 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 
-  owners = ["099720109477"] # Canonical
+  owners = ["099720109477"]
 }
 
 # template_file data source is used to ensure dynamic variables are available before the template is read or rendered.
@@ -95,4 +95,4 @@ data "template_file" "user_data" {
 // }
 
 # All Availablitlity zones in the current AWS region.
-data "aws_availablilty_zones" "all" {}
+// data "aws_availablilty_zones" "all" {}
