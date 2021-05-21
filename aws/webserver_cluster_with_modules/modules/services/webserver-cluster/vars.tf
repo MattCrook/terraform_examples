@@ -1,13 +1,13 @@
 variable "db_remote_state_bucket" {
   description = "The name of the S3 bucket used for the database's remote state storage"
   type        = string
-  // default     = "tf-up-and-running-state-mc"
+  default     = "tf-up-and-running-state-mc"
 }
 
 variable "db_remote_state_key" {
   description = "The name of the key in the S3 bucket used for the database's remote state storage"
   type        = string
-  // default     = "stage/data-store/mysql/terraform.tfstate"
+  default     = "stage/data-store/mysql/terraform.tfstate"
 }
 
 variable "server_port" {
