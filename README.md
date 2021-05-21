@@ -20,7 +20,7 @@ This repository consists of a collection of Terraform examples and projects prov
 #### Stage/data-store
 * `aws_db_instance` - mysql database (RDS instance)
 
-#### Services/webserver-cluster
+#### Stage/Services/webserver-cluster
 
 * `aws_launch_configuration` - An instance configuration template that an Auto Scaling group uses to launch EC2 instances.
 * `aws_autoscaling_group` - Collection of Amazon EC2 instances that are treated as a logical grouping for the purposes of automatic scaling and management.
