@@ -13,7 +13,7 @@ locals {
 
 
 # To use ASG (Auto Scaling Group) replace the "aws_instance" with the following.
-# ASG takes care of launching a cluster or EC2 instances, monitoring health, replacing failed instances, and ajusting size of cluster in response to load.
+# Launch Config takes care of launching a cluster or EC2 instances, monitoring health, replacing failed instances, and ajusting size of cluster in response to load.
 resource "aws_launch_configuration" "my_instance" {
     # image_id               = data.aws_ami.ubuntu.id
     image_id               = var.ami

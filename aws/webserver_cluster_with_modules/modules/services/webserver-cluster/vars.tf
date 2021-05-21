@@ -50,10 +50,10 @@ variable "custom_tags" {
 
 # Boolean input variable that we can use to specify wheather the module should enable auto-scaling
 # Way to conditionally create auto-scaling for some users but not for others.
-// variable "enable_autoscaling" {
-//   description = "If set to true, enable auto scaling"
-//   type        = bool
-// }
+variable "enable_autoscaling" {
+  description = "If set to true, enable auto scaling"
+  type        = bool
+}
 
 # Commented out for now, but can use with the 2 various user-data scipts to allow the user to select which one to use.
 # Implemented with if/else statement in data.tf

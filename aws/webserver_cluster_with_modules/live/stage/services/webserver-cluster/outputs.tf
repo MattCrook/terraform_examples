@@ -29,6 +29,6 @@ output "alb_security_group_id" {
 }
 
 output "example_load_balancer_Ipv6" {
-    value       = module.webserver-cluster.example_load_balancer_Ipv6
+    value       = module.webserver_cluster.example_load_balancer_Ipv6
     description = "IPv6 address of the load balancer"
 }

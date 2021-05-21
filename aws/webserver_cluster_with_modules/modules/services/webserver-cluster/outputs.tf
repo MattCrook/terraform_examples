@@ -25,6 +25,6 @@ output "alb_security_group_id" {
 }
 
 output "example_load_balancer_Ipv6" {
-    value       = aws_lb.example_load_balancer.subnet_mapping.ipv6_address
+    value       = aws_lb.example_load_balancer.subnet_mapping[*].ipv6_address
     description = "IPv6 address of the load balancer"
 }
