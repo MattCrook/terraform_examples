@@ -3,15 +3,15 @@ provider "aws" {
 }
 
 # Providing a backend for the web-server cluster to use S3 as the backend.
-terraform {
-    backend "s3" {
-        bucket         = "tf-up-and-running-state-mc"
-        key            = "stage/services/webserver-cluster/terraform.tfstate"
-        region         = "us-east-2"
-        dynamodb_table = "tf-up-and-running-locks"
-        encrypt        = true
-    }
-}
+// terraform {
+//     backend "s3" {
+//         bucket         = "tf-up-and-running-state-mc"
+//         key            = "stage/services/webserver-cluster/terraform.tfstate"
+//         region         = "us-east-2"
+//         dynamodb_table = "tf-up-and-running-locks"
+//         encrypt        = true
+//     }
+// }
 
 # When making a change to something in modules/services/webserver-cluster, workflow is:
 # normal git workflow (add, commit, push to master)

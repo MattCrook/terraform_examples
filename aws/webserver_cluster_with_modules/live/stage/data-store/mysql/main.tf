@@ -2,15 +2,15 @@ provider "aws" {
   region = "us-east-2"
 }
 
-terraform {
-    backend "s3" {
-        bucket         = "tf-up-and-running-state-mc"
-        key            = "stage/data-store/mysql/terraform.tfstate"
-        region         = "us-east-2"
-        dynamodb_table = "tf-up-and-running-locks"
-        encrypt        = true
-    }
-}
+// terraform {
+//     backend "s3" {
+//         bucket         = "tf-up-and-running-state-mc"
+//         key            = "stage/data-store/mysql/terraform.tfstate"
+//         region         = "us-east-2"
+//         dynamodb_table = "tf-up-and-running-locks"
+//         encrypt        = true
+//     }
+// }
 
 
 # Creates a database in RDS. Amazon's Relational Database Service.
