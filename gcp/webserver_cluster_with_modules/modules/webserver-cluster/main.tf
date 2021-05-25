@@ -135,3 +135,16 @@ resource "google_compute_firewall" "instance" {
     ports    = ["${var.server_port}"]
   }
 }
+
+resource "google_compute_health_check" "autohealing" {
+  name                = "autohealing-health-check"
+  check_interval_sec  = 5
+  timeout_sec         = 5
+  healthy_threshold   = 2
+  unhealthy_threshold = 10
+
+  http_health_check {
+    request_path = "/health"
+    port         = "8080"
+  }
+}
