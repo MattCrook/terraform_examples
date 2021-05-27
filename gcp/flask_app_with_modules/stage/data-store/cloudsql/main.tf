@@ -14,12 +14,13 @@ terraform {
     }
 }
 
-# Creates a new Google SQL Database Instance.
+# Creates a new Google SQL Database Instance (Currently configured for PostgreSql).
 resource "google_sql_database_instance" "primary" {
-    project          = var.project_id
-    name             = var.db_name
-    region           = var.region
-    database_version = var.db_version
+    project             = var.project_id
+    name                = var.db_name
+    region              = var.region
+    database_version    = var.db_version
+    deletion_protection = false
 
     lifecycle {
         ignore_changes = [settings.0.replication_type]
