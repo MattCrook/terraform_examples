@@ -4,11 +4,11 @@ This repository consists of a collection of Terraform examples and projects prov
 
 ## AWS
 
-### Webserver Cluster (`webserver_cluster_with_modules`)
+### Webserver Cluster (Amazon EC2 Auto Scaling Group)
 
-#### Resources 
+### Resources 
 
-#### Global/S3
+#### Global
 * `aws_s3_bucket` - S3 Bucket to store state files. Used as backend to share state
 * `aws_dynamodb_table` - Amazon's key-value and document NoSQL database
 * `aws_iam_user`
@@ -17,10 +17,14 @@ This repository consists of a collection of Terraform examples and projects prov
 * `aws_iam_user_policy_attachment` - full access
 * `aws_iam_user_policy_attachment` - read only
 
-#### Stage/data-store
+
+#### Environments
+* Stage (staging)
+* Prod (production)
+#### data-store
 * `aws_db_instance` - mysql database (RDS instance)
 
-#### Stage/Services/webserver-cluster
+#### Services/webserver-cluster
 
 * `aws_launch_configuration` - An instance configuration template that an Auto Scaling group uses to launch EC2 instances.
 * `aws_autoscaling_group` - Collection of Amazon EC2 instances that are treated as a logical grouping for the purposes of automatic scaling and management.
@@ -37,3 +41,14 @@ This repository consists of a collection of Terraform examples and projects prov
 * `aws_security_group_rule` - Allows to add custom rules in staging env, to expose an extra port just for testing).
 * `aws_autoscaling_schedule` - auto scaler schedule to scale up during business hours.
 * `aws_autoscaling_schedule` - auto scaler schedule to scale down during evenings.
+
+
+## GCP 
+
+For GCP, there are a couple of different projects. 
+* The `webserver_cluster_with_modules` is a direct mirror of the project by the same name in AWS, transposed to what it would look like under a different provider (in this case GCP).
+  * To see more, click [here](gcp/flask_app_with_modules/README.md).
+* The `flask_app_with_modules` is a stand alone project, that uses Google Compute Engine, and the compute auto-scaler and compute instance group manager to launch and manage a cluster of VMs.
+  * To see more, click [here](gcp/webserver_cluster_with_modules/README.md).
+* The `k8_project` is another stand alone project, that provisions and manages a Kubernetes cluster in GKE.
+  * To see more, click [here](gcp/k8_project/README.md).
