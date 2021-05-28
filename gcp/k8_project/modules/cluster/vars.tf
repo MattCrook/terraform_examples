@@ -22,11 +22,11 @@ variable "region" {
   default     = "us-central1"
 }
 
-variable "node_pool_region" {
-  description = "The region of the node pool"
-  type        = string
-  default     = "us-central1"
-}
+// variable "node_pool_region" {
+//   description = "The region of the node pool"
+//   type        = string
+//   default     = "us-central1"
+// }
 
 // variable "name" {
 //   description = "The namw of the node pool"
@@ -44,21 +44,15 @@ variable "machine_type" {
   default = "n1-standard-1"
 }
 
-variable "service_account_description" {
-  description = "Service account for k8-cluster-poject in project"
-  type        = string
-  default     = "Service account for k8-cluster-poject k8 cluster in project"
-}
-
 variable "auto_repair" {
   description = "Whether the nodes will be automatically repaired"
-  type        = boolean
+  type        = bool
   // default     = true
 }
 
 variable "auto_upgrade" {
   description = "Whether the nodes will be automatically upgraded"
-  type        = boolean
+  type        = bool
   // default     = true
 }
 
@@ -95,7 +89,7 @@ variable "image_type" {
 variable "instance_type" {
   description = "The name of a Google Compute Engine machine type"
   type        = string
-  // default     = "n1-standard-8"
+  default     = "n1-standard-8"
 }
 
 ###### Required input varbiables in child module to be defined #######
@@ -110,15 +104,25 @@ variable "password" {
   type        = string
 }
 
-variable "service_account_display_name" {
+// variable "account_id" {
+//   description = "The Service Account ID"
+//   type        = string
+// }
+
+variable "account_id" {
   description = "The Service Account name displayed in GCP"
   type        = string
+  default     = "k8-cluster-project-cluster-default-sa"
+}
+
+variable "display_name" {
+  description = "The Service Account name displayed in GCP"
+  type        = string
+  default     ="k8-cluster-project-cluster-sa"
 }
 
 variable "service_account_description" {
   description = "Service account description for k8-cluster-poject in project"
   type        = string
+  default     = "k8-cluster-project default Kubernetes cluster"
 }
-
-  # account_id   = "k8-cluster-sa"
-  # display_name = "k8-cluster-sa"

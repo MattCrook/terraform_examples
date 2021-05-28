@@ -4,6 +4,6 @@ output "service_account_email" {
 }
 
 output "service_account_id" {
-    description = "an identifier for the resource"
+    description = "An identifier for the resource"
     value       = google_service_account.sa.id
 }

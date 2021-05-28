@@ -7,8 +7,8 @@ resource "random_id" "instance_id" {
 }
 
 resource "google_service_account" "serviceaccount" {
-  account_id   = "${var.service_account_display_name}-${random_id.instance_id.hex}"
-  display_name = var.service_account_display_name
+  account_id   = "${var.account_id}-${random_id.instance_id.hex}"
+  display_name = var.display_name
   project      = var.project_id
   description  = var.service_account_description
 }

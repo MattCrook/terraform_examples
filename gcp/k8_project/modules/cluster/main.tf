@@ -7,14 +7,12 @@ resource "random_id" "instance_id" {
   byte_length = 8
 }
 
-
+# ToDo: Move to th default_cluster module
 module "k8_cluster_sa" {
-  source      = "../service_account/main.tf"
-  account_id   = "${var.service_account_display_name}"
-  display_name = var.service_account_display_name
-  account_id   = "k8-cluster-sa"
-  display_name = "k8-cluster-sa"
-  project      = var.project_id
+  source      = "../service_account"
+  account_id   = var.account_id
+  display_name = var.display_name
+  project      = "k8-cluster-project"
   description  = var.service_account_description
 }
 
