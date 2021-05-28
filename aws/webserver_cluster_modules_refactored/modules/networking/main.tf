@@ -2,6 +2,11 @@ terraform {
   required_version = ">= 0.12"
 }
 
+locals {
+  http_port    = 80
+  tcp_protocol = "tcp"
+  all_ips      = ["0.0.0.0/0"]
+}
 
 resource "aws_lb" "example_load_balancer" {
     name               = "${var.cluster_name}-lb"
