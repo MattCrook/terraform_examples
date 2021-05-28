@@ -31,7 +31,7 @@ This repository consists of a collection of Terraform examples and projects prov
 * `aws_security_group` - Specifies that the group allows incoming TCP requests on port 8080 from CIDR block 0.0.0.0/0. (By defult AWS does not allow incoming and outgoing traffic on EC2 instance).
 * `aws_lb` - load balancer
 * `aws_lb_listener` - Configures the ALB to listen on port 80, use HTTP protocol and send a simple 404 page as default response for requests that didn't match the listener rules.
-* `aws_lb_target_group` - Target Group for ASG. This target group with health check the instances by periodically sending and HTTP request to each instance and will consider them "healthy" only if the instances response matches the configured "matcher".
+* `aws_lb_target_group` - Target Group for ASG. This target group will health check the instances by periodically sending and HTTP request to each instance and will consider them "healthy" only if the instance's response matches the configured "matcher".
 * `aws_lb_listener_rule` - Ties things together with adding a listener rule that sends requests that match any path to the target group that contains our ASG(Auto Scaling Group).
 * `aws_cloudwatch_metric_alarm` - Cloudwatch alarm that will notify you via a variety of mechanisms if a specific metric exceeds a predefined threshold.
 * `aws_cloudwatch_metric_alarm` - Cloudwatch alarm that will go off if your CPU credits are low - meaning the webserver-cluster is almost out of CPU credits.
