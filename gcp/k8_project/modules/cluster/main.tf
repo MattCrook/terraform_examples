@@ -48,7 +48,7 @@ resource "google_container_cluster" "default" {
 
 
 resource "google_container_node_pool" "default_node_pool" {
-  name       = var.name
+  name       = "${var.cluster_name}-node-pool"
   project    = var.project_id
   location   = var.region
   cluster    = google_container_cluster.default.name
