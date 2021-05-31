@@ -23,9 +23,11 @@ variable "service_account_description" {
 // variable "role" {
 //   description = "Service account role"
 //   type        = string
+//      default = "roles/container.admin"
 // }
 
 // variable "members" {
 //   description = "Service account list of members"
 //   type        = list
+//   default     = []
 // }

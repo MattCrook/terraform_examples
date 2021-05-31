@@ -13,14 +13,19 @@ resource "random_id" "project_id" {
 
 
 resource "google_project" "project" {
-  name       = "${var.project_name}-${random_id.project_id.hex}"
-  project_id = var.project_id
+  name       = var.project_name
+  project_id = "${var.project_id}-${random_id.project_id.hex}"
 }
 
 
 resource "google_project_service" "service" {
   for_each = toset([
-    "compute.googleapis.com"
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "iam.googleapis.com",
+    "sqladmin.googleapis.com",
+    "serviceusage.googleapis.com"
+    
   ])
 
   service = each.key
@@ -29,14 +34,10 @@ resource "google_project_service" "service" {
   disable_on_destroy = false
 }
 
-module "k8-admin-sa" {
-    display_name = var.service_account_display_name
-    description  = var.service_account_description
-    role         = var.role
-    members      = var.members
-}
-
-
 output "project_id" {
   value = google_project.project.project_id
+}
+
+output "google_project_service" {
+  value = google_project_service.service.id
 }

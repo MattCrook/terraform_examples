@@ -6,8 +6,7 @@ terraform {
 provider "google" {
   project     = var.project_id
   region      = var.region
-//   zone        = var.zone
-//   credentials = file("credentials.json")
+  // credentials = file("credentials.json")
 }
 
 // terraform {
@@ -27,18 +26,17 @@ resource "random_string" "password" {
 module "default_cluster" {
     source = "../../../modules/cluster"
 
-    name                        = "k8-cluster-project-gke-cluster-default"
-    project                     = "k8-cluster-project"
-    // service_account_description = "k8-cluster-project default Kubernetes cluster"
-    location                    = "us-central1"
-    username                    = var.username
-    password                    = "${random_string.password.result}"
-    disk_size_gb                = 50
-    disk_type                   = "pd-standard"
-    image_type                  = "COS"
-    node_count                  = 3
-    auto_repair                 = true
-    auto_upgrade                = true
-    // display_name                = var.account_id
-    // account_id                  = var.account_id
+    cluster_name        = "k8-cluster-project-gke-cluster-default"
+    project_id          = var.project_id
+    region              = var.region
+    cluster_description = "k8-cluster-project default Kubernetes cluster"
+    username            = var.username
+    password            = "${random_string.password.result}"
+    machine_type        = "n1-standard-1"
+    disk_size           = 50
+    disk_type           = "pd-standard"
+    image_type          = "COS"
+    node_count          = 3
+    auto_repair         = true
+    auto_upgrade        = true
 }

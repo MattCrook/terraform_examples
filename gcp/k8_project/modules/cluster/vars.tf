@@ -7,7 +7,7 @@ variable "cluster_name" {
 variable "project_id" {
   description = "The ID of the project in GCP"
   type        = string
-  // default     = "k8-cluster-project"
+  default     = "k8-cluster-project"
 }
 
 variable "cluster_description" {
@@ -19,20 +19,8 @@ variable "cluster_description" {
 variable "region" {
   description = "The region of the project"
   type        = string
-  default     = "us-central1"
+  // default     = "us-central1"
 }
-
-// variable "node_pool_region" {
-//   description = "The region of the node pool"
-//   type        = string
-//   default     = "us-central1"
-// }
-
-// variable "name" {
-//   description = "The namw of the node pool"
-//   type        = string
-//   default     = "k8-cluster-project-node-pool"
-// }
 
 variable "node_count" {
   description = "The number of nodes in the node pool"
@@ -41,7 +29,9 @@ variable "node_count" {
 }
 
 variable "machine_type" {
-  default = "n1-standard-1"
+  description = "Type of VM the node should run on"
+  type        = string
+  // default     = "n1-standard-1"
 }
 
 variable "auto_repair" {
@@ -86,11 +76,11 @@ variable "image_type" {
   // default     = "COS"
 }
 
-variable "instance_type" {
-  description = "The name of a Google Compute Engine machine type"
-  type        = string
-  default     = "n1-standard-8"
-}
+// variable "instance_type" {
+//   description = "The name of a Google Compute Engine machine type"
+//   type        = string
+//   default     = "n1-standard-8"
+// }
 
 ###### Required input varbiables in child module to be defined #######
 
@@ -104,15 +94,10 @@ variable "password" {
   type        = string
 }
 
-// variable "account_id" {
-//   description = "The Service Account ID"
-//   type        = string
-// }
-
 variable "account_id" {
   description = "The Service Account name displayed in GCP"
   type        = string
-  default     = "k8-cluster-project-cluster-default-sa"
+  default     = "cluster-sa"
 }
 
 variable "display_name" {
@@ -125,4 +110,11 @@ variable "service_account_description" {
   description = "Service account description for k8-cluster-poject in project"
   type        = string
   default     = "k8-cluster-project default Kubernetes cluster"
+}
+
+variable "master_version" {
+  description = "K8 version"
+  type        = string
+  default     = "latest"
+  // default     = "1.18.18-gke.1700"
 }
