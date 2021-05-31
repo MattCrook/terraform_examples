@@ -3,13 +3,18 @@ terraform {
 }
 
 
-# ToDo: Move to the default_cluster module
 module "k8_cluster_sa" {
   source                       = "../service_account"
   account_id                   = var.account_id
   display_name                 = var.display_name
   project_id                   = var.project_id
   service_account_description  = var.service_account_description
+}
+
+resource "google_service_account_iam_binding" "get_credentials" {
+  service_account_id = module.k8_cluster_sa.service_account_id
+  role               = "roles/container.admin"
+  members            = ["serviceAccount:${module.k8_cluster_sa.service_account_email}"]
 }
 
 
