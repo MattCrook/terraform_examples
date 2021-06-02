@@ -9,7 +9,7 @@ This repository consists of a collection of Terraform examples and projects prov
 * The `webserver_cluster_asg` consists of an Auto Scaling group that launches a cluster a VMs.
   * To see more, click [here](aws/webserver_cluster_asg).
 * The `webserver_cluster_with_modules` builds on the `webserver_cluster_asg` by adding additional resources, as well as creating modules for logical separation of concerns and code portability and reusability.
-  * To see more, click [here](aws/webserver_cluster_with_modules/README.md).
+  * To see more, click [here](aws/webserver_cluster_with_modules).
 * The `webserver_cluster_with_modules_refactored` is the finished product with complete refactoring and separation/ creation of modules, as well as added resources, with the addition of examples (best practice for new developers that will be using the modules, to help better understand how the module is supposed to be used) and tests.
   * To see more, click [here](aws/webserver_cluster_modules_refactored).
 
