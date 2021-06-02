@@ -47,4 +47,4 @@ output "master_version" {
   value = module.default_cluster.master_version
 }
 
-output k8s_context { value = "gke_${var.project_id}_${var.region}_${var.cluster_name}"}
+output k8s_context { value = "gke_${var.project_id}_${var.location}_${var.cluster_name}"}

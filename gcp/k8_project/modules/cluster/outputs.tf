@@ -43,4 +43,8 @@ output "client_key" {
   sensitive   = true
 }
 
+output "master_version" {
+  value = google_container_cluster.default.master_version
+}
+
 output k8s_context { value = "gke-${var.project_id}_${google_container_cluster.default.location}_${google_container_cluster.default.name}"}
