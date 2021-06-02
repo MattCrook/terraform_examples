@@ -4,48 +4,19 @@ This repository consists of a collection of Terraform examples and projects prov
 
 ## AWS
 
-### Webserver Cluster (Amazon EC2 Auto Scaling Group)
+* The `simple_ami_on_EC2` is a simple set up of a single AMI (Amazon Machine Image) with security groups, a load balancer, and load balancer listener.
+  * To see more, click [here](aws/simple_ami_on_EC2).
+* The `webserver_cluster_asg` consists of an Auto Scaling group that launches a cluster a VMs.
+  * To see more, click [here](aws/webserver_cluster_asg).
+* The `webserver_cluster_with_modules` builds on the `webserver_cluster_asg` by adding additional resources, as well as creating modules for logical separation of concerns and code portability and reusability.
+  * To see more, click [here](aws/webserver_cluster_with_modules/README.md).
+* The `webserver_cluster_with_modules_refactored` is the finished product with complete refactoring and separation/ creation of modules, as well as added resources, with the addition of examples (best practice for new developers that will be using the modules, to help better understand how the module is supposed to be used) and tests.
+  * To see more, click [here](aws/webserver_cluster_modules_refactored).
 
-### Resources 
+## GCP
 
-#### Global
-* `aws_s3_bucket` - S3 Bucket to store state files. Used as backend to share state
-* `aws_dynamodb_table` - Amazon's key-value and document NoSQL database
-* `aws_iam_user`
-* `aws_iam_policy` - full access
-* `aws_iam_policy` - read only
-* `aws_iam_user_policy_attachment` - full access
-* `aws_iam_user_policy_attachment` - read only
+For GCP, there are a couple of different projects.
 
-
-#### Environments
-* Stage (staging)
-* Prod (production)
-#### data-store
-* `aws_db_instance` - mysql database (RDS instance)
-
-#### Services/webserver-cluster
-
-* `aws_launch_configuration` - An instance configuration template that an Auto Scaling group uses to launch EC2 instances.
-* `aws_autoscaling_group` - Collection of Amazon EC2 instances that are treated as a logical grouping for the purposes of automatic scaling and management.
-* `aws_security_group` - Specifies that the group allows incoming TCP requests on port 8080 from CIDR block 0.0.0.0/0. (By defult AWS does not allow incoming and outgoing traffic on EC2 instance).
-* `aws_lb` - load balancer
-* `aws_lb_listener` - Configures the ALB to listen on port 80, use HTTP protocol and send a simple 404 page as default response for requests that didn't match the listener rules.
-* `aws_lb_target_group` - Target Group for ASG. This target group will health check the instances by periodically sending and HTTP request to each instance and will consider them "healthy" only if the instance's response matches the configured "matcher".
-* `aws_lb_listener_rule` - Ties things together with adding a listener rule that sends requests that match any path to the target group that contains our ASG(Auto Scaling Group).
-* `aws_cloudwatch_metric_alarm` - Cloudwatch alarm that will notify you via a variety of mechanisms if a specific metric exceeds a predefined threshold.
-* `aws_cloudwatch_metric_alarm` - Cloudwatch alarm that will go off if your CPU credits are low - meaning the webserver-cluster is almost out of CPU credits.
-
-* `aws_security_group` - ingress (rules to allow inbound requests)
-* `aws_security_group` - egress (rules to allow outbound requests)
-* `aws_security_group_rule` - Allows to add custom rules in staging env, to expose an extra port just for testing).
-* `aws_autoscaling_schedule` - auto scaler schedule to scale up during business hours.
-* `aws_autoscaling_schedule` - auto scaler schedule to scale down during evenings.
-
-
-## GCP 
-
-For GCP, there are a couple of different projects. 
 * The `webserver_cluster_with_modules` is a direct mirror of the project by the same name in AWS, transposed to what it would look like under a different provider (in this case GCP).
   * To see more, click [here](gcp/flask_app_with_modules/README.md).
 * The `flask_app_with_modules` is a stand alone project, that uses Google Compute Engine, and the compute auto-scaler and compute instance group manager to launch and manage a cluster of VMs.
