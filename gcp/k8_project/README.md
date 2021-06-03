@@ -1,6 +1,6 @@
 # Kubernetes Cluster Project
 
-This project provisions all that is needed for a Kuubernetes cluster in GKE. In addition to the cluster itself, additional resources are created such as a new project, service accounts, and various IAM roles and bindings. Full list of resources can be found below.
+This project provisions all that is needed for a Kubernetes cluster in GKE. In addition to the cluster itself, additional resources are created such as a new project, service accounts, and various IAM roles and bindings. Full list of resources can be found below.
 
 ## Environments
 
@@ -12,11 +12,11 @@ There are two environments that are included in this project:
 ## File Structure
 
 * **Live**
-  * *Global* - global resources that will be used in all environments. For example, the Cloud storage bucket to be used as backend and store for the terraform remote state.
+  * *Global* - global resources that will be used in all environments. For example, the Cloud Storage Bucket to be used as backend and store for the terraform remote state.
   * *Stage* - all resources and child modules needed to provision the staging environment.
   * *Prod* - all resources and child modules needed to provision the production environment.
 * **Modules**
-  * *Cluster* - module for creating a Kubernetes cluster, with it's node pool(s).
+  * *Cluster* - module for creating a Kubernetes cluster, with it's node pool(s) and node(s).
   * *Project* - module for creating a new GCP project.
   * *Service Account* - module for creating a service account.
 
