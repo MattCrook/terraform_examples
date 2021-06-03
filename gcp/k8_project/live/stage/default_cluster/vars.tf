@@ -10,6 +10,13 @@ variable "project_id" {
   default     = "k8-cluster-project"
 }
 
+variable "machine_type" {
+  description = "The ID of the project in GCP"
+  type        = string
+  # default     = "n1-standard-1"
+  default     = "g1-small"
+}
+
 # The location (region or zone) in which the cluster master will be created, 
 # as well as the default node location. If you specify a zone (such as us-central1-a), 
 # the cluster will be a zonal cluster with a single cluster master. If you specify a region (such as us-west1), 

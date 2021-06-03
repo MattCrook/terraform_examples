@@ -1,26 +1,14 @@
-provider "google" {
-  project     = var.project_id
-  region      = var.region
-  zone        = var.zone
-  credentials = file("credentials.json")
+terraform {
+  required_version = ">= 0.12"
 }
 
-# Configure this module to store its state in the GCS bucket created in main.tf in webserver-cluster.
-// terraform {
-//     backend "gcs" {
-//         bucket      = "tf-up-and-running-state-mc"
-//         prefix      = "stage/data-stores/cloudsql/terraform.tfstate"
-//         credentials = "./credentials.json"
-//     }
-// }
-
 # Creates a new Google SQL Database Instance (Currently configured for PostgreSql).
-resource "google_sql_database_instance" "primary" {
+resource "google_sql_database_instance" "mysql" {
     project             = var.project_id
-    name                = var.db_name
+    name                = "${var.db_name}-${var.environment}"
     region              = var.region
     database_version    = var.db_version
-    deletion_protection = false
+    deletion_protection = var.deletion_protection
 
     lifecycle {
         ignore_changes = [settings.0.replication_type]
@@ -56,4 +44,9 @@ resource "google_sql_database_instance" "primary" {
         }
     }
     timeouts {}
+}
+
+resource "random_string" "password" {
+  length = 16
+  special = true
 }
