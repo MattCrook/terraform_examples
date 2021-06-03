@@ -18,8 +18,8 @@ This repository consists of a collection of Terraform examples and projects prov
 For GCP, there are a couple of different projects.
 
 * The `webserver_cluster_with_modules` is a direct mirror of the project by the same name in AWS, transposed to what it would look like under a different provider (in this case GCP).
-  * To see more, click [here](gcp/flask_app_with_modules/README.md).
+  * To see more, click [here](gcp/flask_app_with_modules).
 * The `flask_app_with_modules` is a stand alone project, that uses Google Compute Engine, and the compute auto-scaler and compute instance group manager to launch and manage a cluster of VMs.
-  * To see more, click [here](gcp/webserver_cluster_with_modules/README.md).
+  * To see more, click [here](gcp/webserver_cluster_with_modules).
 * The `k8_project` is another stand alone project, that provisions and manages a Kubernetes cluster in GKE.
-  * To see more, click [here](gcp/k8_project/README.md).
+  * To see more, click [here](gcp/k8_project).
