@@ -27,6 +27,7 @@ module "mysql" {
     deletion_protection = var.deletion_protection
 }
 
+# Represents a SQL database inside the Cloud SQL instance, hosted in Google's cloud.
 resource "google_sql_database" "k8-project-stage" {
   name      = "k8-project-stage"
   instance  = module.mysql.name
@@ -35,14 +36,11 @@ resource "google_sql_database" "k8-project-stage" {
   project = var.project_name
 }
 
-// resource "random_string" "password" {
-//   length = 16
-//   special = true
+# Used for PostgreSql. Because Cloud SQL for PostgreSQL is a managed service,
+# it restricts access to certain system procedures and tables that require advanced privileges.
+// resource "google_sql_user" "k8-project-user" {
+//   name     = "k8-project"
+//   instance = module.mysql.name
+//   password = module.mysql.db_password
+//   project = var.project_name
 // }
-
-resource "google_sql_user" "k8-project-user" {
-  name     = "k8-project"
-  instance = module.mysql.name
-  password = module.mysql.db_password
-  project = var.project_name
-}
