@@ -22,7 +22,7 @@ terraform {
 # Using the module defined in /modules/services/webserver-cluster
 # Really didn't have to fill in these vars, the use of a module is so that we can use
 # the same logic, but pass in different values.
-module "webserver_cluster" {
+module "flask_app" {
   source = "../../../modules/services/webserver-cluster"
 
   project_id             = var.project_id
@@ -78,19 +78,19 @@ resource "google_compute_firewall" "firewall-ssh-builder-access-router" {
   }
 
   source_ranges           = ["0.0.0.0/0"]
-  target_service_accounts = ["${module.webserver_cluster.service_account.email}"]
+  target_service_accounts = ["${module.flask_app.service_account.email}"]
 }
 
 # Allow SA service account use the default GCE account
 // resource "google_service_account_iam_member" "gce-default-account-iam" {
 //   service_account_id = data.google_compute_default_service_account.default.name
 //   role               = "roles/iam.serviceAccountUser"
-//   member             = "serviceAccount:${module.webserver_cluster.service_account.name}"
+//   member             = "serviceAccount:${module.flask_app.service_account.name}"
 // }
 
 
 // resource "google_service_account_iam_member" "admin-account-iam" {
-//   service_account_id = "${module.webserver_cluster.service_account.email}"
+//   service_account_id = "${module.flask_app.service_account.email}"
 //   role               = "roles/iam.serviceAccountUser"
 //   member             = "user:jane@example.com"
 // }
