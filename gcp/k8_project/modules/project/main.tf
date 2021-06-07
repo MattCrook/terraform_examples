@@ -8,7 +8,7 @@ provider "google" {
 }
 
 resource "random_id" "project_id" {
-  byte_length = 8
+  byte_length = 4
 }
 
 
