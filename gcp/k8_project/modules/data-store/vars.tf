@@ -33,6 +33,19 @@ variable "deletion_protection" {
   type        = bool
 }
 
+// variable "env" {
+//   description = "The Environment for which the context of resouce should be created in"
+//   type        = string
+// }
+
+variable "user_labels" {
+  description = "Custom labels to set on the mysql db instance"
+  type        = map(string)
+  default     = {
+    "env" = "staging"
+    }
+}
+
 variable db_version { default = "MYSQL_8_0" }
 variable disk_size { default = "725" }
 variable disk_type { default = "PD_SSD" }

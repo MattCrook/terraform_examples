@@ -21,9 +21,18 @@ resource "google_sql_database_instance" "mysql" {
         availability_type              = "REGIONAL"
         disk_type                      = var.disk_type
         pricing_plan                   = "PER_USE"
-        user_labels = {
-            "env" = "dev"
+        // user_labels = {
+        //     "env" = "dev"
+        // }
+
+        dynamic "user_labels" {
+            for_each = var.user_labels
+
+            content = {
+                user_labels.key = user_labels.value
+            }
         }
+
         ip_configuration {
             ipv4_enabled = true
             require_ssl = false

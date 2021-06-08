@@ -25,7 +25,6 @@ resource "google_project_service" "service" {
     "iam.googleapis.com",
     "sqladmin.googleapis.com",
     "serviceusage.googleapis.com"
-    
   ])
 
   service = each.key
