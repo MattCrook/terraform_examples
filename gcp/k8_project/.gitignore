@@ -6,4 +6,4 @@
 *.tfstate.*
 credentials.json
 
-notes.txt
+notes.txt*
