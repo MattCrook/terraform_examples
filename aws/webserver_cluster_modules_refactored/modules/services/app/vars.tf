@@ -42,7 +42,7 @@ variable "instance_type" {
 
 variable "server_text" {
   description = "The text the web server should return"
-  default     = "Hello, World"
+  default     = "Hello, Terraform"
   type        = string
 }
 

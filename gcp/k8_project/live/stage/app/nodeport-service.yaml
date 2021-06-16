@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-nodeport
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+    # port of the service's internal clusterIP
+  - port: 80
+    protocol: TCP
+    # Target port of the backing pods
+    targetPort: 8080
+    # service will be accessible through port 30123 of each of your cluster nodes
+    nodePort: 30123
+  selector:
+    app: demo
