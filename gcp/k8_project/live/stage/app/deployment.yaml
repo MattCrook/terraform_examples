@@ -6,11 +6,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: demo
+      app: demo
   template:
     metadata:
       labels:
-        run: demo
+        app: demo
     spec:
       containers:
       - image: nginx:latest

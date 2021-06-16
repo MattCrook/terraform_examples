@@ -5,11 +5,14 @@ metadata:
   annotations:
     app.kubernetes.io/component: ingress
     app: demo
-    # If you're running multiple ingress controllers, or running on a cloud provider that natively handles ingress such as GKE,
-    # you need to specify the annotation kubernetes.io/ingress.class: "nginx" in all ingresses
-    # that you would like the ingress-nginx controller to claim
-    # kubernetes.io/ingress.class: demo-public
 spec:
+  # tls for HTTPS configuration under tls attribute
+  tls:
+    # tls connections will be accepted for the demo.example.com hostname
+    - hosts:
+        - demo.example.com
+      # The private key and the certificate should be obtained from the tls-secret you created previously
+      secretName: tls-secret
   rules:
     # This ingress maps the demo.example.com domain name to your service
     - host: demo.example.com

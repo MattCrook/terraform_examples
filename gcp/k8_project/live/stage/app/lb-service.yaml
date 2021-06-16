@@ -4,6 +4,8 @@ metadata:
   name: demo-loadbalancer
 spec:
   type: LoadBalancer
+  # Prevent a network hop, by configuring service to redirect all external traffic only to pods running on the node that received the connection.
+  externalTrafficPolicy: Local
   ports:
   - port: 80
     targetPort: 8080
