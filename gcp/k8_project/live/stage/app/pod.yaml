@@ -3,12 +3,14 @@ kind: Pod
 metadata:
   name: kubia-manual-v2
   labels:
-    creation_method: manual
-    env: prod
+    # creation_method: manual
+    # env: prod
+    enabled: "true"
+    app: demo
 spec:
   containers:
-  - name: hello-world
-    image: hello-world
+  - name: kubia
+    image: luksa/kubia
     resources:
       limits:
         memory: "128Mi"

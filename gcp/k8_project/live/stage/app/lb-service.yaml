@@ -5,9 +5,10 @@ metadata:
 spec:
   type: LoadBalancer
   # Prevent a network hop, by configuring service to redirect all external traffic only to pods running on the node that received the connection.
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
   ports:
   - port: 80
     targetPort: 8080
   selector:
     app: demo
+    enabled: "true"

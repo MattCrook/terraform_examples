@@ -10,8 +10,12 @@ spec:
   - port: 80
     protocol: TCP
     # Target port of the backing pods
+    # 8080 goes to kubia pod, por 80 goes to the nginx pod.
+    # This is th port that the containerPort field defines.
     targetPort: 8080
     # service will be accessible through port 30123 of each of your cluster nodes
     nodePort: 30123
+    # Service's pod selector, any pod with this label will be included as endpoints for this service.
   selector:
     app: demo
+    enabled: "true"

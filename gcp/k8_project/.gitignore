@@ -7,3 +7,6 @@
 credentials.json
 
 notes.txt*
+
+tls.cert*
+tls.key*
