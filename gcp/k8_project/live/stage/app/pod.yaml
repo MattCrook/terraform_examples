@@ -15,6 +15,14 @@ spec:
       limits:
         memory: "128Mi"
         cpu: "500m"
+    # livenessProbe that will perform an http GET. A way to make sure applications are restarted in such cases,
+    # you must check an application’s health from the outside and not depend on the app doing it internally
+    livenessProbe:
+      httpGet:
+        # path to request in the http request
+        path: /
+        # network port the probe should attach to
+        port: 8080
     ports:
       - containerPort: 8080
         protocol: TCP
