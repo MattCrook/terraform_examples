@@ -22,3 +22,8 @@ spec:
               serviceName: demo-nodeport
               servicePort: 80
               # servicePort: 8080
+          - path: /fortune
+            backend:
+              # All requests will be sent to port 80 of the demo-loadbalancer service
+              serviceName: demo-loadbalancer
+              servicePort: 80
