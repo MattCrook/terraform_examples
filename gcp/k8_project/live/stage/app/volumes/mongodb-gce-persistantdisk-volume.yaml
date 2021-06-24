@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongodb
+  labels:
+    app: demo
+    name: mongodb
+spec:
+  volumes:
+    # Name of volume (also referenced when mounting the volume)
+    - name: mongodb-data
+      # The type of the volume is a GCE Persistent Disk
+      gcePersistentDisk:
+        # The name of the persistent disk must match the actual PD you created earlier.
+        pdName: mongodb
+        # The filesystem type is EXT4 (a type of Linux filesystem)
+        fsType: ext4
+  containers:
+  - name: mongodb
+    image: mongo
+    volumeMounts:
+      # The name of the volume referenced when mounting the volume. (from .spec.volumes.name)
+      - name: mongodb-data
+        # The path where mongo will store its data
+        mountPath: /data/db
+    resources:
+      limits:
+        memory: "64Mi"
+        cpu: "250m"
+    ports:
+      - containerPort: 27017
+        protocol: TCP
