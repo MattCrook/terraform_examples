@@ -47,4 +47,10 @@ output "master_version" {
   value = module.default_cluster.master_version
 }
 
+output "password" {
+  description = "The password to use for HTTP basic authentication when accessing the Kubernetes master endpoint"
+  sensitive   = true
+  value       = "${module.default_cluster.password.result}"
+}
+
 output k8s_context { value = "gke_${var.project_id}_${var.location}_${var.cluster_name}"}

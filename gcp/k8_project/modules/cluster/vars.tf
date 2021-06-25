@@ -125,3 +125,13 @@ variable "node_pool_name" {
   description = "The name of the cluster"
   type        = string
 }
+
+variable "enable_vertical_pod_autoscaling" {
+  type        = bool
+  default     = false
+}
+
+variable "release_channel" {
+  type        = string
+  default     = "STABLE"
+}

@@ -47,4 +47,9 @@ output "master_version" {
   value = google_container_cluster.default.master_version
 }
 
+output "password" {
+  description = "The password to use for HTTP basic authentication when accessing the Kubernetes master endpoint"
+  value     = google_container_cluster.default.password.result
+}
+
 output k8s_context { value = "gke-${var.project_id}_${google_container_cluster.default.location}_${google_container_cluster.default.name}"}

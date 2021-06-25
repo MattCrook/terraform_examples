@@ -22,6 +22,15 @@ resource "google_container_cluster" "default" {
   logging_service    = var.logging_service
   monitoring_service = var.monitoring_service
 
+  release_channel {
+    channel = var.release_channel
+  }
+
+  vertical_pod_autoscaling {
+    enabled = var.enable_vertical_pod_autoscaling
+  }
+
+  # If this block is provided and both username and password are empty, basic authentication will be disabled.
   master_auth {
     username = ""
     password = ""
