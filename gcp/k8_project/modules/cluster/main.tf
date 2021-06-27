@@ -104,3 +104,18 @@ resource "google_container_node_pool" "default_node_pool" {
     ignore_changes = [initial_node_count]
   }
 }
+
+# GCE Persistant Disk to attach PV's and PVC' to.
+# Persistent disks are located independently from your virtual machine instances, so you can detach or move persistent disks to keep your data even after you delete your instances.
+resource "google_compute_disk" "gce_persistant_disk" {
+  name  = var.gce_storage_disk_name
+  type  = var.gce_storage_disk_type
+  zone  = google_container_cluster.default.location
+  size  = var.gce_storage_disk_size
+  # Image optional
+  # image = "debian-9-stretch-v20200805"
+  labels = {
+    environment = "stage"
+  }
+  physical_block_size_bytes = 4096
+}

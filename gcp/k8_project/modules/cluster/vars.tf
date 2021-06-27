@@ -135,3 +135,32 @@ variable "release_channel" {
   type        = string
   default     = "STABLE"
 }
+
+variable "gce_storage_disk_name" {
+  description = "Name of the resource. Provided by the client when the resource is created"
+  type        = string
+}
+
+variable "gce_storage_disk_type" {
+  description = "URL of the disk type resource describing which disk type to use to create the disk. Provide this when creating the disk"
+  type        = string
+  default     = "pd-ssd"
+}
+
+variable "gce_storage_disk_size" {
+  description = "Size of the persistent disk, specified in GB"
+  type        = string
+}
+
+variable "environments" {
+    type = "map"
+    default = {
+        "environment"  = "stage"
+    }
+}
+# Optional in google_compute_disk resource.
+// variable "gce_storage_disk_image" {
+//   description = "The image from which to initialize this disk"
+//   type        = string
+//   default     = "debian-9-stretch-v20200805"
+// }

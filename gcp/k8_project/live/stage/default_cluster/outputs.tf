@@ -53,4 +53,19 @@ output "password" {
   value       = "${module.default_cluster.password.result}"
 }
 
+output "creation_timestamp" {
+  description = "Creation timestamp in RFC3339 text format"
+  value     = module.default_cluster.creation_timestamp
+}
+
+output "gce_storage_disk_self_link" {
+  description = "The URI of the created resource"
+  value     = module.default_cluster.gce_storage_disk_self_link
+}
+
+output "source_image_id" {
+  description = "The ID value of the image used to create this disk"
+  value     = module.default_cluster.source_image_id
+}
+
 output k8s_context { value = "gke_${var.project_id}_${var.location}_${var.cluster_name}"}

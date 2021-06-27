@@ -10,8 +10,13 @@ spec:
   accessModes:
     - ReadWriteOnce
     - ReadOnlyMany
-  # After the claim is released, the PersistentVolume should be retained (not erased or deleted)
+  # After the claim is released (for example the pvc that binds to the pv is deleted), the PersistentVolume should be retained (not erased or deleted).
+  # If PVC is deleted, on this setting the pv will show status of RELEASED, not AVAILABLE. Because the data left by the previous pod using the pvc is still there, and
+  # a new pod using the same PV could read the data left there, even if the claim and pod were in a different namespace.
+  # Retain, Recycle, Delete
   persistentVolumeReclaimPolicy: Retain
   gcePersistentDisk:
+    # Name of the PersistentDisk, as can be seen if created with Terraform (the name you gave it), or can look up in GCP console under compute/disks.
+    # Backed by GCE PersistentDisk you created.
     pdName: mongodb
     fsType: ext4

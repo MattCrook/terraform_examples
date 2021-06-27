@@ -39,3 +39,9 @@ variable "node_pool_name" {
   type        = string
   default     = "cluster-project"
 }
+
+variable "gce_storage_disk_name" {
+  description = "The name of the GCEPersistantDisk"
+  type        = string
+  default     = "mongodb"
+}

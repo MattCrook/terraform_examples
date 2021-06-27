@@ -52,4 +52,19 @@ output "password" {
   value     = google_container_cluster.default.password.result
 }
 
+output "creation_timestamp" {
+  description = "Creation timestamp in RFC3339 text format"
+  value     = google_compute_disk.gce_persistant_disk.creation_timestamp
+}
+
+output "gce_storage_disk_self_link" {
+  description = "The URI of the created resource"
+  value     = google_compute_disk.gce_persistant_disk.self_link
+}
+
+output "source_image_id" {
+  description = "The ID value of the image used to create this disk"
+  value     = google_compute_disk.gce_persistant_disk.source_image_id
+}
+
 output k8s_context { value = "gke-${var.project_id}_${google_container_cluster.default.location}_${google_container_cluster.default.name}"}
