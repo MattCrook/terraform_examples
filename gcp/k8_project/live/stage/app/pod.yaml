@@ -18,8 +18,10 @@ spec:
     livenessProbe:
       httpGet:
         # path to request in the http request
-        path: /
+        # path: /
         # network port the probe should attach to
+        # port: 8080
+        path: /healthz
         port: 8080
       # If you don/t set the initial delay, the prober will start probing the container as soon as it starts, which
       # usually leads to the probe failing, bc the app isn't ready to start receiving requests.
