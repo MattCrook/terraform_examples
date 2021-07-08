@@ -2,6 +2,10 @@ terraform {
     required_version = ">= 0.12"
 }
 
+provider "aws" {
+    region = "us-east-1"
+}
+
 resource "aws_vpc" "fairwinds_code_challenge_vpc" {
     cidr_block           = var.main_vpc_cidr
     instance_tenancy     = "default"
