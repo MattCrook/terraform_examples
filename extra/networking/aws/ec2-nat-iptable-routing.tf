@@ -6,7 +6,7 @@ provider "aws" {
     region = "us-east-1"
 }
 
-resource "aws_vpc" "fairwinds_code_challenge_vpc" {
+resource "aws_vpc" "Main" {
     cidr_block           = var.main_vpc_cidr
     instance_tenancy     = "default"
     enable_dns_support   = true
@@ -15,23 +15,23 @@ resource "aws_vpc" "fairwinds_code_challenge_vpc" {
 
 
 resource "aws_internet_gateway" "IGW" {
-    vpc_id =  aws_vpc.fairwinds_code_challenge_vpc.id
+    vpc_id =  aws_vpc.Main.id
 }
 
 # Create a Public Subnets.
 resource "aws_subnet" "publicsubnets" {
-    vpc_id     =  aws_vpc.fairwinds_code_challenge_vpc.id
+    vpc_id     =  aws_vpc.Main.id
     cidr_block = "${var.public_subnets}"
 }
 
 resource "aws_subnet" "privatesubnets" {
-    vpc_id     =  aws_vpc.fairwinds_code_challenge_vpc.id
+    vpc_id     =  aws_vpc.Main.id
     cidr_block = "${var.private_subnets}"
 }
 
 # Route table for Public Subnet's
 resource "aws_route_table" "PublicRT" {
-    vpc_id =  aws_vpc.fairwinds_code_challenge_vpc.id
+    vpc_id =  aws_vpc.Main.id
 
     route {
         # Traffic from Public Subnet reaches Internet via Internet Gateway
@@ -42,7 +42,7 @@ resource "aws_route_table" "PublicRT" {
 
 # Route table for Private Subnet's
 resource "aws_route_table" "PrivateRT" {
-    vpc_id = aws_vpc.fairwinds_code_challenge_vpc.id
+    vpc_id = aws_vpc.Main.id
 
     route {
         # Traffic from Private Subnet reaches Internet via NAT Gateway
