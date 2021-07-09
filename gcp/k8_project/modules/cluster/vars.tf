@@ -14,10 +14,10 @@ variable "cluster_description" {
   type        = string
 }
 
-# The location (region or zone) in which the cluster master will be created, 
-# as well as the default node location. If you specify a zone (such as us-central1-a), 
-# the cluster will be a zonal cluster with a single cluster master. If you specify a region (such as us-west1), 
-# the cluster will be a regional cluster with multiple masters spread across zones in the region, 
+# The location (region or zone) in which the cluster master will be created,
+# as well as the default node location. If you specify a zone (such as us-central1-a),
+# the cluster will be a zonal cluster with a single cluster master. If you specify a region (such as us-west1),
+# the cluster will be a regional cluster with multiple masters spread across zones in the region,
 # and with default node locations in those zones as well
 variable "location" {
   description = "The location (region or zone) in which the cluster master will be created"
@@ -44,17 +44,15 @@ variable "auto_upgrade" {
   type        = bool
 }
 
-// variable "min_node_count" {
-//   description = "Minimum number of nodes in the NodePool"
-//   type        = number
-//   default     = 1
-// }
+variable "min_node_count" {
+  description = "Minimum number of nodes in the NodePool"
+  type        = number
+}
 
-// variable "max_node_count" {
-//   description = "Maximum number of nodes in the NodePool"
-//   type        = number
-//   default     = 3
-// }
+variable "max_node_count" {
+  description = "Maximum number of nodes in the NodePool"
+  type        = number
+}
 
 variable "disk_size" {
   description = "Size of the disk attached to each node, specified in GB"
@@ -149,15 +147,18 @@ variable "gce_storage_disk_type" {
 
 variable "gce_storage_disk_size" {
   description = "Size of the persistent disk, specified in GB"
-  type        = string
+  type        = number
 }
 
 variable "environments" {
-    type = "map"
+    type = map
     default = {
         "environment"  = "stage"
     }
 }
+
+
+
 # Optional in google_compute_disk resource.
 // variable "gce_storage_disk_image" {
 //   description = "The image from which to initialize this disk"

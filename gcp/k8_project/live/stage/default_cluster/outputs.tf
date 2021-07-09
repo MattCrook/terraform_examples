@@ -50,7 +50,7 @@ output "master_version" {
 output "password" {
   description = "The password to use for HTTP basic authentication when accessing the Kubernetes master endpoint"
   sensitive   = true
-  value       = "${module.default_cluster.password.result}"
+  value       = random_string.password.result
 }
 
 output "creation_timestamp" {
@@ -68,4 +68,4 @@ output "source_image_id" {
   value     = module.default_cluster.source_image_id
 }
 
-output k8s_context { value = "gke_${var.project_id}_${var.location}_${var.cluster_name}"}
+output k8s_context { value = "gke_${var.project_id}_${var.location}"}

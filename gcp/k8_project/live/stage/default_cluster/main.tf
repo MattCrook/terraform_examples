@@ -4,11 +4,11 @@ terraform {
 
 # The google and google-beta provider blocks are used to configure the credentials you use to authenticate with GCP,
 # as well as a default project and location (zone and/or region) for your resources.
-provider "google" {}
-//   project     = var.project_id
-//   region      = var.region
-//   credentials = file("credentials.json")
-// }
+provider "google" {
+  project     = var.project_id
+  region      = var.region
+  # credentials = file("credentials.json")
+}
 
 // terraform {
 //     backend "gcs" {
@@ -22,7 +22,6 @@ resource "random_string" "password" {
   length = 16
   special = true
 }
-
 
 module "default_cluster" {
     source = "../../../modules/cluster"
@@ -43,5 +42,25 @@ module "default_cluster" {
     auto_repair           = true
     auto_upgrade          = true
     gce_storage_disk_name = var.gce_storage_disk_name
-    gce_storage_disk_size = "10GB"
+    gce_storage_disk_size = 10
+    min_node_count        = var.min_node_count
+    max_node_count        = var.max_node_count
+}
+
+resource "local_file" "password" {
+   content         = "${random_string.password.result}"
+   filename        = "password.pem"
+   file_permission = 0400
+}
+
+resource "local_file" "cluster_ca_certificate" {
+   content         = "${module.default_cluster.certificate}"
+   filename        = "cluster_ca_certificate.pem"
+   file_permission = 0400
+}
+
+resource "local_file" "client_certificate" {
+   content         = "${module.default_cluster.client_certificate}"
+   filename        = "client_certificate.pem"
+   file_permission = 0400
 }

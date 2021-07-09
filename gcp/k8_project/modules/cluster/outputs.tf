@@ -34,37 +34,32 @@ output "certificate" {
 }
 
 output "client_certificate" {
-  value = google_container_cluster.default.master_auth.0.client_certificate
-  sensitive   = true
+  value     = google_container_cluster.default.master_auth.0.client_certificate
+  sensitive = true
 }
 
 output "client_key" {
-  value = google_container_cluster.default.master_auth.0.client_key
-  sensitive   = true
+  value     = google_container_cluster.default.master_auth.0.client_key
+  sensitive = true
 }
 
 output "master_version" {
   value = google_container_cluster.default.master_version
 }
 
-output "password" {
-  description = "The password to use for HTTP basic authentication when accessing the Kubernetes master endpoint"
-  value     = google_container_cluster.default.password.result
-}
-
 output "creation_timestamp" {
   description = "Creation timestamp in RFC3339 text format"
-  value     = google_compute_disk.gce_persistant_disk.creation_timestamp
+  value       = google_compute_disk.gce_persistant_disk.creation_timestamp
 }
 
 output "gce_storage_disk_self_link" {
   description = "The URI of the created resource"
-  value     = google_compute_disk.gce_persistant_disk.self_link
+  value       = google_compute_disk.gce_persistant_disk.self_link
 }
 
 output "source_image_id" {
   description = "The ID value of the image used to create this disk"
-  value     = google_compute_disk.gce_persistant_disk.source_image_id
+  value       = google_compute_disk.gce_persistant_disk.source_image_id
 }
 
-output k8s_context { value = "gke-${var.project_id}_${google_container_cluster.default.location}_${google_container_cluster.default.name}"}
+output k8s_context { value = "gke-${var.project_id}_${google_container_cluster.default.location}"}
