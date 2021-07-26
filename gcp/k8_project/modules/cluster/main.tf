@@ -55,7 +55,7 @@ resource "google_container_node_pool" "default_node_pool" {
   node_count         = var.node_count
 
   management {
-    auto_repair = var.auto_repair
+    auto_repair  = var.auto_repair
     auto_upgrade = var.auto_upgrade
   }
 

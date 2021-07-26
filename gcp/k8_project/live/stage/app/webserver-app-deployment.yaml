@@ -15,7 +15,7 @@ spec:
         enabled: "true"
     spec:
       containers:
-      - image: mgcrook11/webserver-node-app:1.1
+      - image: mgcrook11/webserver-node-app:1.2
         imagePullPolicy: IfNotPresent
         name: webserver-app
         resources:
