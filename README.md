@@ -22,4 +22,8 @@ For GCP, there are a couple of different projects.
 * The `flask_app_with_modules` is a stand alone project, that uses Google Compute Engine, and the compute auto-scaler and compute instance group manager to launch and manage a cluster of VMs.
   * To see more, click [here](gcp/webserver_cluster_with_modules).
 * The `k8_project` is another stand alone project, that provisions and manages a Kubernetes cluster in GKE, and deploys a simple containerized Node.js/Express app that can be accessed in the browser.
-  * To see more, click [here](gcp/k8_project).
+  * To see the ReadMe for this project, click [here](gcp/k8_project).
+
+### Extra Notes
+
+Extra notes to many commands used [here](extra/notes/NOTES.md)
